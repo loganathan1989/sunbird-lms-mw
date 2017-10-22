@@ -1,0 +1,40 @@
+<actor-config>
+	<init system="ActorSystem">
+		<init-routers>
+			<init-router name="LearnerRouter" count="4"
+				class="org.sunbird.learner.actors.LearnerRouter"></init-router>
+		</init-routers>
+	</init>
+	<actor-managers>
+		<actor name="CourseBatchManagementActor"
+			class="org.sunbird.learner.actors.CourseBatchManagementActor"
+			count="4"></actor>
+		<actor name="CourseEnrollmentActor" 
+		    class="org.sunbird.learner.actors.CourseEnrollmentActor"
+			count="4"></actor>
+		<actor name="CourseManagementActor" 
+		    class="org.sunbird.learner.actors.CourseManagementActor"
+			count="4"></actor>
+		<actor name="LearnerStateActor" 
+		    class="org.sunbird.learner.actors.LearnerStateActor"
+			count="4"></actor>
+		<actor name="LearnerStateUpdateActor" 
+		    class="org.sunbird.learner.actors.LearnerStateUpdateActor"
+			count="4"></actor>
+		<actor name="PageManagementActor" 
+		    class="org.sunbird.learner.actors.PageManagementActor"
+			count="4"></actor>
+		<actor name="AssessmentItemActor"
+			class="org.sunbird.learner.actors.assessment.AssessmentItemActor"
+			count="4"></actor>
+		<actor name="BulkUploadBackGroundJobActor"
+			class="org.sunbird.learner.actors.bulkupload.BulkUploadBackGroundJobActor"
+			count="4"></actor>
+		<actor name="CourseSearchActor"
+			class="org.sunbird.learner.actors.search.CourseSearchActor" 
+			count="4"></actor>
+		<actor name="CourseMetricsActor" 
+		    class="org.sunbird.metrics.actors.CourseMetricsActor"
+			count="4"></actor>
+	</actor-managers>
+</actor-config>

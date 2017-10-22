@@ -1,0 +1,25 @@
+<actor-config>
+	<init system="ActorSystem">
+		<init-routers>
+			<init-router name="UserRouter" count="4"
+				class="org.sunbird.user.actors.UserRouter"></init-router>
+		</init-routers>
+	</init>
+	<actor-managers>
+		<actor name="NotesManagementActor" 
+		    class="org.sunbird.user.actors.NotesManagementActor"
+			count="4"></actor>
+		<actor name="OrganisationManagementActor"
+			class="org.sunbird.user.actors.OrganisationManagementActor" 
+			count="4"></actor>
+		<actor name="BadgesActor" 
+		    class="org.sunbird.user.actors.badges.BadgesActor"
+			count="4"></actor>
+		<actor name="OrganisationMetricsActor"
+			class="org.sunbird.metrics.actors.OrganisationMetricsActor" 
+			count="4"></actor>
+		<actor name="UserMetricsActor" 
+		    class="org.sunbird.metrics.actors.badges.UserMetricsActor"
+			count="4"></actor>
+	</actor-managers>
+</actor-config>

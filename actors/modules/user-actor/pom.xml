@@ -2,31 +2,12 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-	<groupId>org.sunbird</groupId>
-	<artifactId>sunbird-lms-mw</artifactId>
-	<version>1.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>actor</artifactId>
-  <packaging>pom</packaging>
-  <name>actor</name>
-  <properties>
-    <version.compiler.plugin>2.3.1</version.compiler.plugin>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <scoverage.plugin.version>1.1.1</scoverage.plugin.version>
-    <slf4j.version>1.6.1</slf4j.version>
-    <logback.version>1.0.7</logback.version>
-  </properties>
-  <modules>
-	<module>modules/common-actor</module>
-	<module>modules/learner-actor</module>
-	<module>modules/user-actor</module>
-  </modules>
+  <groupId>org.sunbird</groupId>
+  <artifactId>user-actor</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>user_actor</name>
   <dependencies>
-    <dependency>
+     <dependency>
       <groupId>org.sunbird</groupId>
       <artifactId>cassandra-dac</artifactId>
       <version>1.0-SNAPSHOT</version>
@@ -94,83 +75,92 @@
       <version>1.6.4</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-api-mockito</artifactId>
       <version>1.6.4</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
       <version>3.8</version>
     </dependency>
-
-    <!-- adding dependency for quartz scheduler job-->
     <dependency>
       <groupId>org.quartz-scheduler</groupId>
       <artifactId>quartz</artifactId>
       <version>2.2.1</version>
     </dependency>
+    <!-- adding dependency for quartz scheduler job-->
     <dependency>
       <groupId>org.quartz-scheduler</groupId>
       <artifactId>quartz-jobs</artifactId>
       <version>2.2.1</version>
     </dependency>
-
     <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>42.1.4</version>
     </dependency>
-
     <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
     <dependency>
       <groupId>com.googlecode.json-simple</groupId>
       <artifactId>json-simple</artifactId>
       <version>1.1</version>
     </dependency>
-
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>18.0</version>
     </dependency>
-
     <!-- https://mvnrepository.com/artifact/io.netty/netty-codec -->
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-codec</artifactId>
       <version>4.1.11.Final</version>
     </dependency>
-
-
     <!-- https://mvnrepository.com/artifact/io.netty/netty-transport -->
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-transport</artifactId>
       <version>4.1.11.Final</version>
     </dependency>
-
-
     <!-- https://mvnrepository.com/artifact/io.netty/netty-buffer -->
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-buffer</artifactId>
       <version>4.1.11.Final</version>
     </dependency>
+    <dependency>
+      <groupId>org.sunbird</groupId>
+      <artifactId>common-actor</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
   </dependencies>
-
   <build>
     <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
     <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-    <pluginManagement>
      <plugins>
-      <!-- to create executable jar -->
       <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.3.2</version>
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+          </configuration>
+        </plugin>
+         <!-- to run application  -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.2.1</version>
+          <configuration>
+            <mainClass>org.sunbird.common.Application</mainClass>
+          </configuration>
+        </plugin>
+        <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.0.0</version>
@@ -207,59 +197,6 @@
           </execution>
         </executions>
       </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.20</version>
-          <configuration>
-            <skipTests>true</skipTests>
-            <includes>
-              <include>**/*Spec.java</include>
-              <include>**/*Test.java</include>
-            </includes>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>com.atlassian.maven.plugins</groupId>
-          <artifactId>maven-clover2-plugin</artifactId>
-          <version>4.0.5</version>
-          <configuration>
-            <!--<targetPercentage>1%</targetPercentage>-->
-            <includes>
-              <include>**/*.java</include>
-            </includes>
-            <excludes>
-              <exclude>**/*.scala</exclude>
-            </excludes>
-          </configuration>
-          <executions>
-            <execution>
-              <phase>verify</phase>
-              <goals>
-                <goal>instrument</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <!-- to run application  -->
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>1.2.1</version>
-          <configuration>
-            <mainClass>org.sunbird.common.Application</mainClass>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
+    </plugins>
   </build>
 </project>
