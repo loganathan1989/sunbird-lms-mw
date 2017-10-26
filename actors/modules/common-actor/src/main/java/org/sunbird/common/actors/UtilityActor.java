@@ -183,6 +183,7 @@ public class UtilityActor extends UntypedAbstractActor {
 
   private void updateUserCoursesToES(Map<String, Object> courseMap) {
     Request request = new Request();
+    request.setManagerName(ActorOperations.UPDATE_USR_COURSES_INFO_ELASTIC.getKey());
     request.setOperation(ActorOperations.UPDATE_USR_COURSES_INFO_ELASTIC.getValue());
     request.getRequest().put(JsonKey.USER_COURSES, courseMap);
     try {

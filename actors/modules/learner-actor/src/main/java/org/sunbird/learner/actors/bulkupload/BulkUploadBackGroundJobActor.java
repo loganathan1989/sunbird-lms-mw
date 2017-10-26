@@ -907,7 +907,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       String updatedBy, String objectType) {
     Request req = new Request();
     Response res = new Response();
-    req.setRequest_id(processId);
+    req.setRequestId(processId);
     req.setOperation(actorOperationType);
     req.getRequest().put(JsonKey.REQUESTED_BY, updatedBy);
     if (objectType.equalsIgnoreCase(JsonKey.USER)) {

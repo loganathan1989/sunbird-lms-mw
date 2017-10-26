@@ -5,8 +5,6 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-
-import org.sunbird.common.actors.RequestRouter;
 import org.sunbird.common.actors.RequestRouterActor;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerEnum;
@@ -48,8 +46,8 @@ public class Application {
       con = ConfigFactory.load().getConfig(ACTOR_CONFIG_NAME);
     }
     system = ActorSystem.create(REMOTE_ACTOR_SYSTEM_NAME, con);
-    ActorRef actorSelectorRef = system.actorOf(Props.create(RequestRouter.class),
-        RequestRouter.class.getSimpleName());
+    ActorRef actorSelectorRef = system.actorOf(Props.create(RequestRouterActor.class),
+        RequestRouterActor.class.getSimpleName());
     ProjectLogger.log("startRemoteCreationSystem method called....");
     ProjectLogger.log("learnerActorSelectorRef " + actorSelectorRef);
     ProjectLogger.log("ACTORS STARTED " + actorSelectorRef, LoggerEnum.INFO.name());
@@ -65,8 +63,8 @@ public class Application {
   public static ActorRef startLocalActorSystem() {
     system = ActorSystem.create(ACTOR_SYSTEM_NAME,
         ConfigFactory.load().getConfig(ACTOR_LOCAL_CONFIG_NAME));
-    ActorRef actorSelectorRef = system.actorOf(Props.create(RequestRouter.class),
-        RequestRouter.class.getSimpleName());
+    ActorRef actorSelectorRef = system.actorOf(Props.create(RequestRouterActor.class),
+        RequestRouterActor.class.getSimpleName());
     ProjectLogger.log("ACTORS STARTED " + actorSelectorRef, LoggerEnum.INFO.name());
     checkCassandraConnection();
     return actorSelectorRef;

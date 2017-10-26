@@ -39,7 +39,8 @@ public class RecommendorActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
-        reqObj.setRequest_id("1");
+        reqObj.setRequestId("1");
+        reqObj.setManagerName(ActorOperations.GET_RECOMMENDED_COURSES.getKey());
         reqObj.setOperation(ActorOperations.GET_RECOMMENDED_COURSES.getValue());
         HashMap<String, Object> innerMap = new HashMap<>();
         innerMap.put(JsonKey.REQUESTED_BY, "USR");
@@ -57,7 +58,8 @@ public class RecommendorActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
-        reqObj.setRequest_id("1211");
+        reqObj.setRequestId("1211");
+        reqObj.setManagerName("INVALID_OPERATION");
         reqObj.setOperation("INVALID_OPERATION");
         subject.tell(reqObj, probe.getRef());
         probe.expectMsgClass(ProjectCommonException.class);

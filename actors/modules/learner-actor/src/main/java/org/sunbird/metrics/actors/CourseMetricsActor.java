@@ -230,6 +230,7 @@ public class CourseMetricsActor extends BaseMetricsActor {
         requestDbInfo);
 
     Request backGroundRequest = new Request();
+    backGroundRequest.setManagerName(ActorOperations.FILE_GENERATION_AND_UPLOAD.getKey());
     backGroundRequest.setOperation(ActorOperations.FILE_GENERATION_AND_UPLOAD.getValue());
     backGroundRequest.getRequest().put(JsonKey.DATA , finalList);
     backGroundRequest.getRequest().put(JsonKey.REQUEST_ID , requestId);
@@ -303,6 +304,7 @@ public class CourseMetricsActor extends BaseMetricsActor {
 
     // assign the back ground task to background job actor ...
     Request backGroundRequest = new Request();
+    backGroundRequest.setManagerName(ActorOperations.PROCESS_DATA.getKey());
     backGroundRequest.setOperation(ActorOperations.PROCESS_DATA.getValue());
     backGroundRequest.getRequest().put(JsonKey.REQUEST , JsonKey.CourseProgress);
     backGroundRequest.getRequest().put(JsonKey.REQUEST_ID , requestId);

@@ -20,9 +20,10 @@ import org.sunbird.common.models.util.ProjectUtil;
 import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.responsecode.ResponseCode;
-import org.sunbird.helper.ServiceFactory;
 import org.sunbird.common.util.ActorUtil;
 import org.sunbird.common.util.Util;
+import org.sunbird.helper.ServiceFactory;
+
 
 /**
  * @author Manzarul
@@ -278,6 +279,7 @@ public class BadgesActor extends UntypedAbstractActor {
     try {
       ProjectLogger.log("Start background job to save user badge.");
       Request request = new Request();
+      request.setManagerName(ActorOperations.ADD_USER_BADGE_BKG.getKey());
       request.setOperation(ActorOperations.ADD_USER_BADGE_BKG.getValue());
       request.getRequest().put(JsonKey.RECEIVER_ID, receiverId);
       ActorUtil.tell(request);
@@ -287,7 +289,7 @@ public class BadgesActor extends UntypedAbstractActor {
   }
 
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unused" })
   private void getBadges(Request actorMessage) {
     Map<String, Object> req = actorMessage.getRequest();
     try {

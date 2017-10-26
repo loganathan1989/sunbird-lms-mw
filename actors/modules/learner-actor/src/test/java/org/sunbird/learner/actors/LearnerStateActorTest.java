@@ -88,6 +88,7 @@ public class LearnerStateActorTest {
         Map<String, Object> map = new HashMap<>();
         map.put(JsonKey.USER_ID, userId);
         request.setRequest(map);
+        request.setManagerName(ActorOperations.GET_COURSE.getKey());
         request.setOperation(ActorOperations.GET_COURSE.getValue());
         subject.tell(request, probe.getRef());
         Response res= probe.expectMsgClass(duration("10 second"),Response.class);
@@ -105,6 +106,7 @@ public class LearnerStateActorTest {
         Map<String, Object> map = new HashMap<>();
         map.put(JsonKey.USER_ID, userId);
         request.setRequest(map);
+        request.setManagerName("INVALID_OPERATION");
         request.setOperation("INVALID_OPERATION");
         subject.tell(request, probe.getRef());
         probe.expectMsgClass(ProjectCommonException.class);
@@ -133,6 +135,7 @@ public class LearnerStateActorTest {
         List<String> contentList = Arrays.asList(contentId);
         innerMap.put(JsonKey.CONTENT_IDS, contentList);
         request.setRequest(innerMap);
+        request.setManagerName(ActorOperations.GET_CONTENT.getKey());
         request.setOperation(ActorOperations.GET_CONTENT.getValue());
         subject.tell(request, probe.getRef());
         Response res= probe.expectMsgClass(duration("10 second"),Response.class);
@@ -153,6 +156,7 @@ public class LearnerStateActorTest {
         innerMap.put(JsonKey.CONTENT_IDS, contentList);
         innerMap.put(JsonKey.COURSE, innerMap);
         request.setRequest(innerMap);
+        request.setManagerName(ActorOperations.GET_CONTENT.getKey());
         request.setOperation(ActorOperations.GET_CONTENT.getValue());
         subject.tell(request, probe.getRef());
         Response res= probe.expectMsgClass(duration("10 second"),Response.class);
@@ -171,6 +175,7 @@ public class LearnerStateActorTest {
         List<String> courseList = Arrays.asList(courseId);
         innerMap.put(JsonKey.COURSE_IDS, courseList);
         request.setRequest(innerMap);
+        request.setManagerName(ActorOperations.GET_CONTENT.getKey());
         request.setOperation(ActorOperations.GET_CONTENT.getValue());
         subject.tell(request, probe.getRef());
         Response res= probe.expectMsgClass(duration("10 second"),Response.class);

@@ -113,6 +113,7 @@ public class NotesManagementActor extends UntypedAbstractActor {
       sender().tell(result, self());
 
       Request request = new Request();
+      request.setManagerName(ActorOperations.INSERT_USER_NOTES_ES.getKey());
       request.setOperation(ActorOperations.INSERT_USER_NOTES_ES.getValue());
       request.getRequest().put(JsonKey.OPERATION, ActorOperations.INSERT_USER_NOTES_ES.getValue());
       ProjectLogger.log("Calling background job to save org data into ES" + uniqueId);
@@ -167,6 +168,7 @@ public class NotesManagementActor extends UntypedAbstractActor {
 
       Request request = new Request();
       request.getRequest().put(JsonKey.NOTE, req);
+      request.setManagerName(ActorOperations.UPDATE_USER_NOTES_ES.getKey());
       request.setOperation(ActorOperations.UPDATE_USER_NOTES_ES.getValue());
       ActorUtil.tell(request);
 
@@ -308,6 +310,7 @@ public class NotesManagementActor extends UntypedAbstractActor {
 
       Request request = new Request();
       request.getRequest().put(JsonKey.NOTE, req);
+      request.setManagerName(ActorOperations.UPDATE_USER_NOTES_ES.getKey());
       request.setOperation(ActorOperations.UPDATE_USER_NOTES_ES.getValue());
       ActorUtil.tell(request);
     } catch (Exception e) {

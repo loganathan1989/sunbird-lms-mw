@@ -143,7 +143,8 @@ public class UserManagementActor extends UntypedAbstractActor {
    * register email.
    * @param actorMessage Request
    */
-  private void forgotPassword(Request actorMessage) {
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+private void forgotPassword(Request actorMessage) {
     Map<String, Object> map = (Map) actorMessage.getRequest().get(JsonKey.USER);
     String userName = (String) map.get(JsonKey.USERNAME);
     boolean isEmailvalid = ProjectUtil.isEmailvalid(userName);
@@ -206,7 +207,7 @@ public class UserManagementActor extends UntypedAbstractActor {
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   private void getUserDetailsByLoginId(Request actorMessage) {
 
     Util.DbInfo usrDbInfo = Util.dbInfoMap.get(JsonKey.USER_DB);
@@ -425,7 +426,7 @@ public class UserManagementActor extends UntypedAbstractActor {
    *
    * @return List<Map<String,Object>>
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "unused" })
   private List<Map<String, Object>> getOrganisationDetailsByUserId(String userId) {
     List<Map<String, Object>> organisations = new ArrayList<>();
 
@@ -795,6 +796,7 @@ public class UserManagementActor extends UntypedAbstractActor {
 
     if (((String) result.get(JsonKey.RESPONSE)).equalsIgnoreCase(JsonKey.SUCCESS)) {
       Request userRequest = new Request();
+      userRequest.setManagerName(ActorOperations.UPDATE_USER_INFO_ELASTIC.getKey());
       userRequest.setOperation(ActorOperations.UPDATE_USER_INFO_ELASTIC.getValue());
       userRequest.getRequest().put(JsonKey.ID, userMap.get(JsonKey.ID));
       try {
@@ -1304,6 +1306,7 @@ public class UserManagementActor extends UntypedAbstractActor {
     if (((String) response.get(JsonKey.RESPONSE)).equalsIgnoreCase(JsonKey.SUCCESS)) {
       ProjectLogger.log("method call going to satrt for ES--.....");
       Request userRequest = new Request();
+      userRequest.setManagerName(ActorOperations.UPDATE_USER_INFO_ELASTIC.getKey());
       userRequest.setOperation(ActorOperations.UPDATE_USER_INFO_ELASTIC.getValue());
       userRequest.getRequest().put(JsonKey.ID, userMap.get(JsonKey.ID));
       ProjectLogger.log("making a call to save user data to ES");
@@ -2028,6 +2031,7 @@ public class UserManagementActor extends UntypedAbstractActor {
 
     // update record in elasticsearch ......
     Request request = new Request();
+    request.setManagerName(ActorOperations.UPDATE_USER_INFO_ELASTIC.getKey());
     request.setOperation(ActorOperations.UPDATE_USER_INFO_ELASTIC.getValue());
     request.getRequest().put(JsonKey.ID, userId);
     ActorUtil.tell(request);
@@ -2177,6 +2181,7 @@ public class UserManagementActor extends UntypedAbstractActor {
 
     ProjectLogger.log("method call going to satrt for ES--.....");
     Request request = new Request();
+    request.setManagerName(ActorOperations.UPDATE_USER_ROLES_ES.getKey());
     request.setOperation(ActorOperations.UPDATE_USER_ROLES_ES.getValue());
     request.getRequest().put(JsonKey.ROLES, tempMap.get(JsonKey.ROLES));
     request.getRequest().put(JsonKey.TYPE, type);
@@ -2259,6 +2264,7 @@ public class UserManagementActor extends UntypedAbstractActor {
 
     // make user active in elasticsearch ......
     Request request = new Request();
+    request.setManagerName(ActorOperations.UPDATE_USER_INFO_ELASTIC.getKey());
     request.setOperation(ActorOperations.UPDATE_USER_INFO_ELASTIC.getValue());
     request.getRequest().put(JsonKey.ID, userId);
     ActorUtil.tell(request);
@@ -2288,7 +2294,8 @@ public class UserManagementActor extends UntypedAbstractActor {
 
   }
 
-  private List<Map<String, Object>> checkDataUserExtTable(Map<String, Object> map) {
+  @SuppressWarnings("unchecked")
+private List<Map<String, Object>> checkDataUserExtTable(Map<String, Object> map) {
     Util.DbInfo usrExtIdDb = Util.dbInfoMap.get(JsonKey.USR_EXT_ID_DB);
     Map<String, Object> reqMap = new HashMap<>();
     reqMap.put(JsonKey.USER_ID, map.get(JsonKey.USER_ID));
@@ -2349,6 +2356,7 @@ public class UserManagementActor extends UntypedAbstractActor {
       emailTemplateMap.put(JsonKey.EMAIL_TEMPLATE_TYPE, "welcome");
 
       Request request = new Request();
+      request.setManagerName(ActorOperations.EMAIL_SERVICE.getKey());
       request.setOperation(ActorOperations.EMAIL_SERVICE.getValue());
       request.put(JsonKey.EMAIL_REQUEST, emailTemplateMap);
       ActorUtil.tell(request);

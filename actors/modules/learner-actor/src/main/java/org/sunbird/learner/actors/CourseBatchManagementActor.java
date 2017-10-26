@@ -207,6 +207,7 @@ public class CourseBatchManagementActor extends UntypedAbstractActor {
 
     ProjectLogger.log("method call going to satrt for ES--.....");
     Request request = new Request();
+    request.setManagerName(ActorOperations.UPDATE_COURSE_BATCH_ES.getKey());
     request.setOperation(ActorOperations.UPDATE_COURSE_BATCH_ES.getValue());
     request.getRequest().put(JsonKey.BATCH, courseBatchObject);
     ProjectLogger.log("making a call to save Course Batch data to ES");
@@ -354,6 +355,7 @@ public class CourseBatchManagementActor extends UntypedAbstractActor {
     if (((String) result.get(JsonKey.RESPONSE)).equalsIgnoreCase(JsonKey.SUCCESS)) {
       ProjectLogger.log("method call going to satrt for ES--.....");
       Request request = new Request();
+      request.setManagerName(ActorOperations.INSERT_COURSE_BATCH_ES.getKey());
       request.setOperation(ActorOperations.INSERT_COURSE_BATCH_ES.getValue());
       request.getRequest().put(JsonKey.BATCH, req);
       ProjectLogger.log("making a call to save Course Batch data to ES");
@@ -467,6 +469,7 @@ public class CourseBatchManagementActor extends UntypedAbstractActor {
     if (((String) result.get(JsonKey.RESPONSE)).equalsIgnoreCase(JsonKey.SUCCESS)) {
       ProjectLogger.log("method call going to satrt for ES--.....");
       Request request = new Request();
+      request.setManagerName(ActorOperations.INSERT_COURSE_BATCH_ES.getKey());
       request.setOperation(ActorOperations.INSERT_COURSE_BATCH_ES.getValue());
       request.getRequest().put(JsonKey.BATCH, req);
       ProjectLogger.log("making a call to save Course Batch data to ES");
@@ -709,6 +712,7 @@ public class CourseBatchManagementActor extends UntypedAbstractActor {
       if (((String) result.get(JsonKey.RESPONSE)).equalsIgnoreCase(JsonKey.SUCCESS)) {
         ProjectLogger.log("method call going to satrt for ES--.....");
         Request request = new Request();
+        request.setManagerName(ActorOperations.UPDATE_COURSE_BATCH_ES.getKey());
         request.setOperation(ActorOperations.UPDATE_COURSE_BATCH_ES.getValue());
         request.getRequest().put(JsonKey.BATCH, req);
         ProjectLogger.log("making a call to save Course Batch data to ES");
@@ -750,6 +754,7 @@ public class CourseBatchManagementActor extends UntypedAbstractActor {
 
   private void insertUserCoursesToES(Map<String, Object> courseMap) {
     Request request = new Request();
+    request.setManagerName(ActorOperations.INSERT_USR_COURSES_INFO_ELASTIC.getKey());
     request.setOperation(ActorOperations.INSERT_USR_COURSES_INFO_ELASTIC.getValue());
     request.getRequest().put(JsonKey.USER_COURSES, courseMap);
     try {

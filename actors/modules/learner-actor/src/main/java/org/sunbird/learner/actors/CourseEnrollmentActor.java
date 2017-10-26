@@ -144,6 +144,7 @@ public class CourseEnrollmentActor extends UntypedAbstractActor {
 
   private void insertUserCoursesToES(Map<String, Object> courseMap) {
     Request request = new Request();
+    request.setManagerName(ActorOperations.INSERT_USR_COURSES_INFO_ELASTIC.getKey());
     request.setOperation(ActorOperations.INSERT_USR_COURSES_INFO_ELASTIC.getValue());
     request.getRequest().put(JsonKey.USER_COURSES, courseMap);
     try {
@@ -193,8 +194,9 @@ public class CourseEnrollmentActor extends UntypedAbstractActor {
    * @param innerOperation String
    */
   @SuppressWarnings("unused")
-  private void updateCoursemanagement(String operation, Object courseData, String innerOperation) {
+  private void updateCoursemanagement(String managerName, String operation, Object courseData, String innerOperation) {
     Request request = new Request();
+    request.setManagerName(managerName);
     request.setOperation(operation);
     request.getRequest().put(JsonKey.COURSE_ID, courseData);
     request.getRequest().put(JsonKey.OPERATION, innerOperation);

@@ -62,6 +62,7 @@ public class PageManagementActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
+        reqObj.setManagerName("INVALID_OPERATION");
         reqObj.setOperation("INVALID_OPERATION");
 
         subject.tell(reqObj, probe.getRef());
@@ -105,6 +106,7 @@ public class PageManagementActorTest {
       TestKit probe = new TestKit(system);
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
+      reqObj.setManagerName(ActorOperations.CREATE_SECTION.getKey());
       reqObj.setOperation(ActorOperations.CREATE_SECTION.getValue());
       HashMap<String, Object> innerMap = new HashMap<>();
       Map<String , Object> sectionMap = new HashMap<String, Object>();
@@ -138,6 +140,7 @@ public class PageManagementActorTest {
       TestKit probe = new TestKit(system);
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
+      reqObj.setManagerName(ActorOperations.CREATE_SECTION.getKey());
       reqObj.setOperation(ActorOperations.CREATE_SECTION.getValue());
       HashMap<String, Object> innerMap = new HashMap<>();
       Map<String , Object> sectionMap = new HashMap<String, Object>();
@@ -159,6 +162,7 @@ public class PageManagementActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.CREATE_PAGE.getKey());
         reqObj.setOperation(ActorOperations.CREATE_PAGE.getValue());
         HashMap<String, Object> innerMap = new HashMap<>();
         Map<String , Object> pageMap = new HashMap<String , Object>();
@@ -197,6 +201,7 @@ public class PageManagementActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.CREATE_PAGE.getKey());
         reqObj.setOperation(ActorOperations.CREATE_PAGE.getValue());
         HashMap<String, Object> innerMap = new HashMap<>();
         Map<String , Object> pageMap = new HashMap<String , Object>();
@@ -233,6 +238,7 @@ public class PageManagementActorTest {
         TestKit probe = new TestKit(system);
         ActorRef subject = system.actorOf(props);
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.GET_PAGE_SETTING.getKey());
         reqObj.setOperation(ActorOperations.GET_PAGE_SETTING.getValue());
         reqObj.getRequest().put(JsonKey.ID, "Test Page");
         subject.tell(reqObj, probe.getRef());
@@ -251,6 +257,7 @@ public class PageManagementActorTest {
         TestKit probe = new TestKit(system);
         ActorRef subject = system.actorOf(props);
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.GET_PAGE_SETTINGS.getKey());
         reqObj.setOperation(ActorOperations.GET_PAGE_SETTINGS.getValue());
         reqObj.getRequest().put(JsonKey.ID, "Test Page");
         subject.tell(reqObj, probe.getRef());
@@ -271,6 +278,7 @@ public class PageManagementActorTest {
         TestKit probe = new TestKit(system);
         ActorRef subject = system.actorOf(props);
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.GET_ALL_SECTION.getKey());
         reqObj.setOperation(ActorOperations.GET_ALL_SECTION.getValue());
         subject.tell(reqObj, probe.getRef());
         Response response = probe.expectMsgClass(Response.class);
@@ -290,6 +298,7 @@ public class PageManagementActorTest {
         TestKit probe = new TestKit(system);
         ActorRef subject = system.actorOf(props);
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.GET_SECTION.getKey());
         reqObj.setOperation(ActorOperations.GET_SECTION.getValue());
         reqObj.getRequest().put(JsonKey.ID, sectionId);
         subject.tell(reqObj, probe.getRef());
@@ -311,6 +320,7 @@ public class PageManagementActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.UPDATE_PAGE.getKey());
         reqObj.setOperation(ActorOperations.UPDATE_PAGE.getValue());
         HashMap<String, Object> innerMap = new HashMap<>();
         Map<String , Object> pageMap = new HashMap<String , Object>();
@@ -331,6 +341,7 @@ public class PageManagementActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.UPDATE_PAGE.getKey());
         reqObj.setOperation(ActorOperations.UPDATE_PAGE.getValue());
         HashMap<String, Object> innerMap = new HashMap<>();
         Map<String , Object> pageMap = new HashMap<String , Object>();
@@ -379,6 +390,7 @@ public class PageManagementActorTest {
         TestKit probe = new TestKit(system);
         ActorRef subject = system.actorOf(props);
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.GET_PAGE_SETTING.getKey());
         reqObj.setOperation(ActorOperations.GET_PAGE_SETTING.getValue());
         reqObj.getRequest().put(JsonKey.ID, "Test Page Name Updated");
         subject.tell(reqObj, probe.getRef());
@@ -409,6 +421,7 @@ public class PageManagementActorTest {
       TestKit probe = new TestKit(system);
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
+      reqObj.setManagerName(ActorOperations.UPDATE_SECTION.getKey());
       reqObj.setOperation(ActorOperations.UPDATE_SECTION.getValue());
       HashMap<String, Object> innerMap = new HashMap<>();
       Map<String , Object> sectionMap = new HashMap<String, Object>();
@@ -429,6 +442,7 @@ public class PageManagementActorTest {
         TestKit probe = new TestKit(system);
         ActorRef subject = system.actorOf(props);
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.GET_SECTION.getKey());
         reqObj.setOperation(ActorOperations.GET_SECTION.getValue());
         reqObj.getRequest().put(JsonKey.ID, sectionId2);
         subject.tell(reqObj, probe.getRef());
@@ -484,6 +498,7 @@ public class PageManagementActorTest {
       TestKit probe = new TestKit(system);
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
+      reqObj.setManagerName(ActorOperations.GET_PAGE_DATA.getKey());
       reqObj.setOperation(ActorOperations.GET_PAGE_DATA.getValue());
       reqObj.getRequest().put(JsonKey.SOURCE, "web");
       reqObj.getRequest().put(JsonKey.PAGE_NAME, "Test Page Name Updated");
@@ -518,6 +533,7 @@ public class PageManagementActorTest {
       TestKit probe = new TestKit(system);
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
+      reqObj.setManagerName(ActorOperations.GET_PAGE_DATA.getKey());
       reqObj.setOperation(ActorOperations.GET_PAGE_DATA.getValue());
       reqObj.getRequest().put(JsonKey.SOURCE, "web");
       reqObj.getRequest().put(JsonKey.PAGE_NAME, "Test Page Name Updated");

@@ -40,6 +40,7 @@ public class CourseSearchActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.GET_COURSE_BY_ID.getKey());
         reqObj.setOperation(ActorOperations.GET_COURSE_BY_ID.getValue());
         HashMap<String, Object> innerMap = new HashMap<>();
         innerMap.put(JsonKey.ID, "NTP course id_71");
@@ -56,6 +57,7 @@ public class CourseSearchActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.SEARCH_COURSE.getKey());
         reqObj.setOperation(ActorOperations.SEARCH_COURSE.getValue());
         HashMap<String, Object> innerMap = new HashMap<>();
         innerMap.put(JsonKey.QUERY, "NTP course");

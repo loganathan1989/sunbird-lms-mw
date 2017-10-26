@@ -343,6 +343,7 @@ public class OrganisationManagementActor extends UntypedAbstractActor {
       }
       Request orgReq = new Request();
       orgReq.getRequest().put(JsonKey.ORGANISATION, req);
+      orgReq.setManagerName(ActorOperations.INSERT_ORG_INFO_ELASTIC.getKey());
       orgReq.setOperation(ActorOperations.INSERT_ORG_INFO_ELASTIC.getValue());
       ProjectLogger.log("Calling background job to save org data into ES" + uniqueId);
       ActorUtil.tell(orgReq);
@@ -406,6 +407,7 @@ public class OrganisationManagementActor extends UntypedAbstractActor {
       // update the ES --
       Request request = new Request();
       request.getRequest().put(JsonKey.ORGANISATION, updateOrgDBO);
+      request.setManagerName(ActorOperations.UPDATE_ORG_INFO_ELASTIC.getKey());
       request.setOperation(ActorOperations.UPDATE_ORG_INFO_ELASTIC.getValue());
       ActorUtil.tell(request);
       return;
@@ -478,6 +480,7 @@ public class OrganisationManagementActor extends UntypedAbstractActor {
       // update the ES --
       Request request = new Request();
       request.getRequest().put(JsonKey.ORGANISATION, updateOrgDBO);
+      request.setManagerName(ActorOperations.UPDATE_ORG_INFO_ELASTIC.getKey());
       request.setOperation(ActorOperations.UPDATE_ORG_INFO_ELASTIC.getValue());
       ActorUtil.tell(request);
 
@@ -688,6 +691,7 @@ public class OrganisationManagementActor extends UntypedAbstractActor {
       }
       Request request = new Request();
       request.getRequest().put(JsonKey.ORGANISATION, updateOrgDBO);
+      request.setManagerName(ActorOperations.UPDATE_ORG_INFO_ELASTIC.getKey());
       request.setOperation(ActorOperations.UPDATE_ORG_INFO_ELASTIC.getValue());
       ActorUtil.tell(request);
     } catch (ProjectCommonException e) {
@@ -870,6 +874,7 @@ public class OrganisationManagementActor extends UntypedAbstractActor {
     if (((String) response.get(JsonKey.RESPONSE)).equalsIgnoreCase(JsonKey.SUCCESS)) {
       ProjectLogger.log("method call going to satrt for ES--.....");
       Request request = new Request();
+      request.setManagerName(ActorOperations.UPDATE_USER_ORG_ES.getKey());
       request.setOperation(ActorOperations.UPDATE_USER_ORG_ES.getValue());
       request.getRequest().put(JsonKey.USER, usrOrgData);
       ProjectLogger.log("making a call to save user data to ES");
@@ -919,6 +924,7 @@ public class OrganisationManagementActor extends UntypedAbstractActor {
       if (((String) response.get(JsonKey.RESPONSE)).equalsIgnoreCase(JsonKey.SUCCESS)) {
         ProjectLogger.log("method call going to satrt for ES--.....");
         Request request = new Request();
+        request.setManagerName(ActorOperations.REMOVE_USER_ORG_ES.getKey());
         request.setOperation(ActorOperations.REMOVE_USER_ORG_ES.getValue());
         request.getRequest().put(JsonKey.USER, usrOrgData);
         ProjectLogger.log("making a call to save user data to ES");
@@ -1011,6 +1017,7 @@ public class OrganisationManagementActor extends UntypedAbstractActor {
       if (((String) response.get(JsonKey.RESPONSE)).equalsIgnoreCase(JsonKey.SUCCESS)) {
         ProjectLogger.log("method call going to satrt for ES--.....");
         Request request = new Request();
+        request.setManagerName(ActorOperations.REMOVE_USER_ORG_ES.getKey());
         request.setOperation(ActorOperations.REMOVE_USER_ORG_ES.getValue());
         request.getRequest().put(JsonKey.USER, dataMap);
         ProjectLogger.log("making a call to save user data to ES");

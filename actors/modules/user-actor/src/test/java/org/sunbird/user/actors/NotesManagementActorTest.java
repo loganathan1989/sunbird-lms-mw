@@ -97,6 +97,7 @@ public class NotesManagementActorTest {
     note.put(JsonKey.TAGS, tags);
     request.put(JsonKey.NOTE, note);
     actorMessage.setRequest(request);
+    actorMessage.setManagerName(ActorOperations.CREATE_NOTE.getKey());
     actorMessage.setOperation(ActorOperations.CREATE_NOTE.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -129,6 +130,7 @@ public class NotesManagementActorTest {
     note.put(JsonKey.TAGS, tags);
     request.put(JsonKey.NOTE, note);
     actorMessage.setRequest(request);
+    actorMessage.setManagerName(ActorOperations.CREATE_NOTE.getKey());
     actorMessage.setOperation(ActorOperations.CREATE_NOTE.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -159,6 +161,7 @@ public class NotesManagementActorTest {
     request.put(JsonKey.REQUESTED_BY , userId);
     request.put(JsonKey.NOTE_ID , noteId);
     actorMessage.setRequest(request);
+    actorMessage.setManagerName(ActorOperations.GET_NOTE.getKey());
     actorMessage.setOperation(ActorOperations.GET_NOTE.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -185,6 +188,7 @@ public class NotesManagementActorTest {
     request.put(JsonKey.REQUESTED_BY , userId);
     request.put(JsonKey.NOTE_ID , noteId+"invalid");
     actorMessage.setRequest(request);
+    actorMessage.setManagerName(ActorOperations.GET_NOTE.getKey());
     actorMessage.setOperation(ActorOperations.GET_NOTE.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -212,6 +216,7 @@ public class NotesManagementActorTest {
     note.put(JsonKey.TITLE, "Title Test Update");
     request.put(JsonKey.NOTE, note);
     actorMessage.setRequest(request);
+    actorMessage.setManagerName(ActorOperations.UPDATE_NOTE.getKey());
     actorMessage.setOperation(ActorOperations.UPDATE_NOTE.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -238,6 +243,7 @@ public class NotesManagementActorTest {
     note.put(JsonKey.TITLE, "Title Test Update");
     request.put(JsonKey.NOTE, note);
     actorMessage.setRequest(request);
+    actorMessage.setManagerName(ActorOperations.UPDATE_NOTE.getKey());
     actorMessage.setOperation(ActorOperations.UPDATE_NOTE.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -268,6 +274,7 @@ public class NotesManagementActorTest {
     request.put(JsonKey.OFFSET, 0);
     request.put(JsonKey.LIMIT, 2);
     actorMessage.setRequest(request);
+    actorMessage.setManagerName(ActorOperations.SEARCH_NOTE.getKey());
     actorMessage.setOperation(ActorOperations.SEARCH_NOTE.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -294,6 +301,7 @@ public class NotesManagementActorTest {
     request.put(JsonKey.REQUESTED_BY , userId);
     request.put(JsonKey.NOTE_ID, noteId);
     actorMessage.setRequest(request);
+    actorMessage.setManagerName(ActorOperations.DELETE_NOTE.getKey());
     actorMessage.setOperation(ActorOperations.DELETE_NOTE.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -317,6 +325,7 @@ public class NotesManagementActorTest {
     request.put(JsonKey.REQUESTED_BY , userId);
     request.put(JsonKey.NOTE_ID , noteId+"invalid");
     actorMessage.setRequest(request);
+    actorMessage.setManagerName(ActorOperations.DELETE_NOTE.getKey());
     actorMessage.setOperation(ActorOperations.DELETE_NOTE.getValue());
 
     subject.tell(actorMessage, probe.getRef());

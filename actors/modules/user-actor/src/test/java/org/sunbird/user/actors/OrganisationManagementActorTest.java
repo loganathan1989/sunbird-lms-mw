@@ -68,7 +68,7 @@ public class OrganisationManagementActorTest {
       ActorRef subject = system.actorOf(propsUser);
 
       Request reqObj = new Request();
-      reqObj.setRequest_id("1");
+      reqObj.setRequestId("1");
       reqObj.setOperation(ActorOperations.CREATE_USER.getValue());
       HashMap<String, Object> innerMap = new HashMap<>();
       innerMap.put(JsonKey.USERNAME, "test1buser");
@@ -620,7 +620,7 @@ public class OrganisationManagementActorTest {
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
       reqObj.setOperation(ActorOperations.CREATE_ORG_TYPE.getValue());
-      reqObj.setRequest_id(ExecutionContext.getRequestId());
+      reqObj.setRequestId(ExecutionContext.getRequestId());
       reqObj.setEnv(1);
       reqObj.getRequest().put(JsonKey.NAME, "ORG_TYPE_TEST5");
       subject.tell(reqObj, probe.getRef());
@@ -629,7 +629,7 @@ public class OrganisationManagementActorTest {
       
       Request req = new Request();
       req.setOperation(ActorOperations.GET_ORG_TYPE_LIST.getValue());
-      req.setRequest_id(ExecutionContext.getRequestId());
+      req.setRequestId(ExecutionContext.getRequestId());
       req.setEnv(1);
       subject.tell(req, probe.getRef());
       Response res = probe.expectMsgClass(duration("200 second"), Response.class);
@@ -650,7 +650,7 @@ public class OrganisationManagementActorTest {
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
       reqObj.setOperation(ActorOperations.CREATE_ORG_TYPE.getValue());
-      reqObj.setRequest_id(ExecutionContext.getRequestId());
+      reqObj.setRequestId(ExecutionContext.getRequestId());
       reqObj.setEnv(1);
       reqObj.getRequest().put(JsonKey.NAME, "ORG_TYPE_TES");
       subject.tell(reqObj, probe.getRef());
@@ -659,7 +659,7 @@ public class OrganisationManagementActorTest {
       
       Request req = new Request();
       req.setOperation(ActorOperations.GET_ORG_TYPE_LIST.getValue());
-      req.setRequest_id(ExecutionContext.getRequestId());
+      req.setRequestId(ExecutionContext.getRequestId());
       req.setEnv(1);
       subject.tell(req, probe.getRef());
       Response res = probe.expectMsgClass(duration("200 second"), Response.class);
@@ -679,7 +679,7 @@ public class OrganisationManagementActorTest {
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
       reqObj.setOperation(ActorOperations.GET_ORG_TYPE_LIST.getValue());
-      reqObj.setRequest_id(ExecutionContext.getRequestId());
+      reqObj.setRequestId(ExecutionContext.getRequestId());
       reqObj.setEnv(1);
       subject.tell(reqObj, probe.getRef());
       probe.expectMsgClass(duration("200 second"), Response.class);
@@ -691,7 +691,7 @@ public class OrganisationManagementActorTest {
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
       reqObj.setOperation(ActorOperations.CREATE_ORG_TYPE.getValue());
-      reqObj.setRequest_id(ExecutionContext.getRequestId());
+      reqObj.setRequestId(ExecutionContext.getRequestId());
       reqObj.setEnv(1);
       reqObj.getRequest().put(JsonKey.NAME, "ORG_TYPE_TES");
       subject.tell(reqObj, probe.getRef());
@@ -703,7 +703,7 @@ public class OrganisationManagementActorTest {
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
       reqObj.setOperation(ActorOperations.UPDATE_ORG_TYPE.getValue());
-      reqObj.setRequest_id(ExecutionContext.getRequestId());
+      reqObj.setRequestId(ExecutionContext.getRequestId());
       reqObj.setEnv(1);
       reqObj.getRequest().put(JsonKey.NAME, "ORG_TYP_TEST1");
       reqObj.getRequest().put(JsonKey.ID, orgTypeId2);
@@ -718,7 +718,7 @@ public class OrganisationManagementActorTest {
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
       reqObj.setOperation(ActorOperations.UPDATE_ORG_TYPE.getValue());
-      reqObj.setRequest_id(ExecutionContext.getRequestId());
+      reqObj.setRequestId(ExecutionContext.getRequestId());
       reqObj.setEnv(1);
       reqObj.getRequest().put(JsonKey.NAME, "ORG_TYPE_TEST5");
       reqObj.getRequest().put(JsonKey.ID, orgTypeId2);
@@ -732,7 +732,7 @@ public class OrganisationManagementActorTest {
       ActorRef subject = system.actorOf(props);
       Request reqObj = new Request();
       reqObj.setOperation(ActorOperations.UPDATE_ORG_TYPE.getValue());
-      reqObj.setRequest_id(ExecutionContext.getRequestId());
+      reqObj.setRequestId(ExecutionContext.getRequestId());
       reqObj.setEnv(1);
       reqObj.getRequest().put(JsonKey.NAME, "ORG_TYPE5");
       String id = orgTypeId2+"1";

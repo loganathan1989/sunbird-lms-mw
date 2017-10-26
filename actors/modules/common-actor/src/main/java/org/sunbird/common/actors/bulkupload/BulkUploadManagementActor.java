@@ -434,6 +434,7 @@ public class BulkUploadManagementActor extends UntypedAbstractActor {
       // send processId for data processing to background job
       Request request = new Request();
       request.put(JsonKey.PROCESS_ID, processId);
+      request.setManagerName(ActorOperations.PROCESS_BULK_UPLOAD.getKey());
       request.setOperation(ActorOperations.PROCESS_BULK_UPLOAD.getValue());
       ActorUtil.tell(request);
     }

@@ -40,6 +40,7 @@ public class CourseManagementActorTest {
         ActorRef subject = system.actorOf(props);
 
         Request reqObj = new Request();
+        reqObj.setManagerName(ActorOperations.CREATE_COURSE.getKey());
         reqObj.setOperation(ActorOperations.CREATE_COURSE.getValue());
         HashMap<String, Object> innerMap = new HashMap<>();
         Map<String , Object> courseObject = new HashMap<String , Object>();

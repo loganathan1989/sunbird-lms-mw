@@ -78,14 +78,17 @@ public class MetricsBackGroundJobActor extends UntypedAbstractActor {
     Map<String, Object> request = new HashMap<>();
     request.put(JsonKey.REQUEST_ID, requestId);
     if (JsonKey.OrgCreation.equalsIgnoreCase(operation)) {
+      metricsRequest.setManagerName(ActorOperations.ORG_CREATION_METRICS_DATA.getKey());
       metricsRequest.setOperation(ActorOperations.ORG_CREATION_METRICS_DATA.getValue());
       metricsRequest.setRequest(request);
       ActorUtil.tell(metricsRequest);
     } else if (JsonKey.OrgConsumption.equalsIgnoreCase(operation)) {
+      metricsRequest.setManagerName(ActorOperations.ORG_CONSUMPTION_METRICS_DATA.getKey());
       metricsRequest.setOperation(ActorOperations.ORG_CONSUMPTION_METRICS_DATA.getValue());
       metricsRequest.setRequest(request);
       ActorUtil.tell(metricsRequest);
     } else if (JsonKey.CourseProgress.equalsIgnoreCase(operation)) {
+      metricsRequest.setManagerName(ActorOperations.COURSE_PROGRESS_METRICS_DATA.getKey());
       metricsRequest.setOperation(ActorOperations.COURSE_PROGRESS_METRICS_DATA.getValue());
       metricsRequest.setRequest(request);
       ActorUtil.tell(metricsRequest);
@@ -224,6 +227,7 @@ public class MetricsBackGroundJobActor extends UntypedAbstractActor {
         reportTrackingdbInfo.getTableName(), dbReqMap);
 
     Request backGroundRequest = new Request();
+    backGroundRequest.setManagerName(ActorOperations.SEND_MAIL.getKey());
     backGroundRequest.setOperation(ActorOperations.SEND_MAIL.getValue());
 
     Map<String, Object> innerMap = new HashMap<>();

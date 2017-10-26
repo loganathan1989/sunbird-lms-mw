@@ -45,6 +45,7 @@ public class SchedularActor extends UntypedAbstractActor {
       req.put(JsonKey.PROCESS_ID, map.get(JsonKey.ID));
       ProjectLogger.log("calling bulkUploadBackGroundJobActor for processId from schedular actor "
           + map.get(JsonKey.ID));
+      req.setManagerName(ActorOperations.PROCESS_BULK_UPLOAD.getKey());
       req.setOperation(ActorOperations.PROCESS_BULK_UPLOAD.getValue());
       ActorUtil.tell(req);
     }

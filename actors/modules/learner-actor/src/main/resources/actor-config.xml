@@ -1,11 +1,41 @@
 <actor-config>
-	<init system="ActorSystem">
-		<init-routers>
-			<init-router name="LearnerRouter" count="4"
-				class="org.sunbird.learner.actors.LearnerRouter"></init-router>
-		</init-routers>
-	</init>
 	<actor-managers>
+	    <actor name="BackgroundJobManager" 
+		    class="org.sunbird.common.actors.BackgroundJobManager"
+			count="4">
+		</actor>
+		<actor name="SchedularActor" 
+		    class="org.sunbird.common.actors.SchedularActor"
+			count="4">
+		</actor>
+		<actor name="UtilityActor" 
+		    class="org.sunbird.common.actors.UtilityActor"
+			count="4">
+	    </actor>
+		<actor name="BulkUploadBackGroundJobActor"
+			class="org.sunbird.common.actors.bulkupload.BulkUploadBackGroundJobActor"
+			count="4"></actor>
+		<actor name="FileUploadServiceActor"
+			class="org.sunbird.common.actors.fileuploadservice.FileUploadServiceActor"
+			count="4"></actor>
+		<actor name="EmailServiceActor"
+			class="org.sunbird.common.actors.notificationservice.EmailServiceActor"
+			count="4"></actor>
+		<actor name="RecommendorActor"
+			class="org.sunbird.common.actors.recommend.RecommendorActor" 
+			count="4"></actor>
+		<actor name="SearchHandlerActor"
+			class="org.sunbird.common.actors.search.SearchHandlerActor" 
+			count="4"></actor>
+		<actor name="EsSyncActor"
+			class="org.sunbird.common.actors.syncjobmanager.EsSyncActor" 
+			count="4"></actor>
+		<actor name="ActorAuditLogServiceImpl"
+			class="org.sunbird.common.audit.impl.ActorAuditLogServiceImpl"
+			count="4"></actor>
+		<actor name="MetricsBackGroundJobActor" 
+		    class="org.sunbird.metrics.MetricsBackGroundJobActor"
+			count="4"></actor>
 		<actor name="CourseBatchManagementActor"
 			class="org.sunbird.learner.actors.CourseBatchManagementActor"
 			count="4"></actor>

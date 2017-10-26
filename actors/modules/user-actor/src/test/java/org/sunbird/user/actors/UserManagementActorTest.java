@@ -94,6 +94,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(orgProps);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.CREATE_ORG.getKey());
     reqObj.setOperation(ActorOperations.CREATE_ORG.getValue());
     HashMap<String, Object> innerMap = new HashMap<>();
     Map<String, Object> orgMap = new HashMap<String, Object>();
@@ -120,6 +121,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.CREATE_USER.getKey());
     reqObj.setOperation(ActorOperations.CREATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_1818");
@@ -185,6 +187,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.CREATE_USER.getKey());
     reqObj.setOperation(ActorOperations.CREATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_1818");
@@ -210,6 +213,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.LAST_NAME, "user_last_name_updated");
@@ -241,6 +245,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.LAST_NAME, "user_last_name_updated");
@@ -266,6 +271,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.CREATE_USER.getKey());
     reqObj.setOperation(ActorOperations.CREATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_18181");
@@ -321,6 +327,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -404,6 +411,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.GET_PROFILE.getKey());
     reqObj.setOperation(ActorOperations.GET_PROFILE.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, userId);
@@ -431,6 +439,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.GET_PROFILE.getKey());
     reqObj.setOperation(ActorOperations.GET_PROFILE.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, (userId+"12345"));
@@ -449,6 +458,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.LAST_NAME, "user_last_name_twice");
@@ -480,6 +490,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.LAST_NAME, "user_last_name_thrice");
@@ -512,6 +523,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.LAST_NAME, "user_last_name_frice");
@@ -555,6 +567,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.GET_USER_DETAILS_BY_LOGINID.getKey());
     reqObj.setOperation(ActorOperations.GET_USER_DETAILS_BY_LOGINID.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.LOGIN_ID, encLoginId);
@@ -576,6 +589,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.GET_USER_DETAILS_BY_LOGINID.getKey());
     reqObj.setOperation(ActorOperations.GET_USER_DETAILS_BY_LOGINID.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.LOGIN_ID, "sunbird_dummy_user_1818@BLR1324564");
@@ -599,6 +613,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.GET_USER_DETAILS_BY_LOGINID.getKey());
     reqObj.setOperation(ActorOperations.GET_USER_DETAILS_BY_LOGINID.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.LOGIN_ID, "sunbird_dummy_user_1818@BLR");
@@ -638,6 +653,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.CREATE_USER.getKey());
     reqObj.setOperation(ActorOperations.CREATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_181");
@@ -659,6 +675,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.CREATE_USER.getKey());
     reqObj.setOperation(ActorOperations.CREATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_1818");
@@ -680,6 +697,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.BLOCK_USER.getKey());
     reqObj.setOperation(ActorOperations.BLOCK_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, userId);
@@ -703,6 +721,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.GET_PROFILE.getKey());
     reqObj.setOperation(ActorOperations.GET_PROFILE.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, userId);
@@ -723,6 +742,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UNBLOCK_USER.getKey());
     reqObj.setOperation(ActorOperations.UNBLOCK_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, userId);
@@ -746,6 +766,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.GET_PROFILE.getKey());
     reqObj.setOperation(ActorOperations.GET_PROFILE.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, userId);
@@ -767,6 +788,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, userId);
@@ -813,6 +835,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, userId);
@@ -847,6 +870,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, userId);
@@ -892,6 +916,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USER_ID, userId);
@@ -927,6 +952,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.GET_ROLES.getKey());
     reqObj.setOperation(ActorOperations.GET_ROLES.getValue());
     
     subject.tell(reqObj, probe.getRef());
@@ -941,6 +967,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.CREATE_USER.getKey());
     reqObj.setOperation(ActorOperations.CREATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_19191");
@@ -972,6 +999,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.CREATE_USER.getKey());
     reqObj.setOperation(ActorOperations.CREATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_1919");
@@ -1002,6 +1030,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.CREATE_USER.getKey());
     reqObj.setOperation(ActorOperations.CREATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_1919");
@@ -1032,6 +1061,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_1919");
@@ -1060,6 +1090,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_1919");
@@ -1090,6 +1121,7 @@ public class UserManagementActorTest {
     ActorRef subject = system.actorOf(props);
 
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.UPDATE_USER.getKey());
     reqObj.setOperation(ActorOperations.UPDATE_USER.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_1919");
@@ -1119,6 +1151,7 @@ public class UserManagementActorTest {
     TestKit probe = new TestKit(system);
     ActorRef subject = system.actorOf(props);
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.LOGIN.getKey());
     reqObj.setOperation(ActorOperations.LOGIN.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user@gmail.com");
@@ -1141,6 +1174,7 @@ public class UserManagementActorTest {
     TestKit probe = new TestKit(system);
     ActorRef subject = system.actorOf(props);
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.LOGIN.getKey());
     reqObj.setOperation(ActorOperations.LOGIN.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "test123@ntp");
@@ -1163,6 +1197,7 @@ public class UserManagementActorTest {
     TestKit probe = new TestKit(system);
     ActorRef subject = system.actorOf(props);
     Request reqObj = new Request();
+    reqObj.setManagerName(ActorOperations.LOGIN.getKey());
     reqObj.setOperation(ActorOperations.LOGIN.getValue());
     Map<String, Object> innerMap = new HashMap<>();
     innerMap.put(JsonKey.USERNAME, "sunbird_dummy_user_1818@gmail.com");

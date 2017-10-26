@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.sunbird.cassandra.CassandraOperation;
 import org.sunbird.cassandraimpl.CassandraOperationImpl;
 import org.sunbird.common.ElasticSearchUtil;
+import org.sunbird.common.actors.RequestRouterActor;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
@@ -24,7 +25,6 @@ import org.sunbird.common.request.Request;
 import org.sunbird.common.util.Util;
 import org.sunbird.common.util.Util.DbInfo;
 import org.sunbird.metrics.actors.OrganisationMetricsActor;
-import org.sunbird.user.actors.RequestRouterActor;
 
 import com.typesafe.config.ConfigFactory;
 
@@ -61,6 +61,7 @@ public class OrganisationMetricsActorTest {
     Request actorMessage = new Request();
     actorMessage.put(JsonKey.ORG_ID, "ORG_001");
     actorMessage.put(JsonKey.PERIOD, "7d");
+    actorMessage.setManagerName(ActorOperations.ORG_CREATION_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.ORG_CREATION_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -93,6 +94,7 @@ public class OrganisationMetricsActorTest {
     Request actorMessage = new Request();
     actorMessage.put(JsonKey.ORG_ID, "ORG_001");
     actorMessage.put(JsonKey.PERIOD, "7d");
+    actorMessage.setManagerName(ActorOperations.ORG_CONSUMPTION_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.ORG_CONSUMPTION_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -121,6 +123,7 @@ public class OrganisationMetricsActorTest {
     Request actorMessage = new Request();
     actorMessage.put(JsonKey.ORG_ID, "ORG_001_INVALID");
     actorMessage.put(JsonKey.PERIOD, "7d");
+    actorMessage.setManagerName(ActorOperations.ORG_CREATION_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.ORG_CREATION_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -138,6 +141,7 @@ public class OrganisationMetricsActorTest {
     Request actorMessage = new Request();
     actorMessage.put(JsonKey.ORG_ID, "ORG_001_INVALID");
     actorMessage.put(JsonKey.PERIOD, "7d");
+    actorMessage.setManagerName(ActorOperations.ORG_CONSUMPTION_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.ORG_CONSUMPTION_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -155,6 +159,7 @@ public class OrganisationMetricsActorTest {
     Request actorMessage = new Request();
     actorMessage.put(JsonKey.ORG_ID, "ORG_001");
     actorMessage.put(JsonKey.PERIOD, "10d");
+    actorMessage.setManagerName(ActorOperations.ORG_CREATION_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.ORG_CREATION_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -172,6 +177,7 @@ public class OrganisationMetricsActorTest {
     Request actorMessage = new Request();
     actorMessage.put(JsonKey.ORG_ID, "ORG_001");
     actorMessage.put(JsonKey.PERIOD, "10d");
+    actorMessage.setManagerName(ActorOperations.ORG_CONSUMPTION_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.ORG_CONSUMPTION_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -203,6 +209,7 @@ public class OrganisationMetricsActorTest {
     actorMessage.put(JsonKey.PERIOD, "7d");
     actorMessage.put(JsonKey.REQUESTED_BY, userId);
     actorMessage.put(JsonKey.FORMAT, "csv");
+    actorMessage.setManagerName(ActorOperations.ORG_CREATION_METRICS_REPORT.getKey());
     actorMessage.setOperation(ActorOperations.ORG_CREATION_METRICS_REPORT.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -234,6 +241,7 @@ public class OrganisationMetricsActorTest {
     actorMessage.put(JsonKey.PERIOD, "7d");
     actorMessage.put(JsonKey.REQUESTED_BY, userId);
     actorMessage.put(JsonKey.FORMAT, "csv");
+    actorMessage.setManagerName(ActorOperations.ORG_CONSUMPTION_METRICS_REPORT.getKey());
     actorMessage.setOperation(ActorOperations.ORG_CONSUMPTION_METRICS_REPORT.getValue());
 
     subject.tell(actorMessage, probe.getRef());

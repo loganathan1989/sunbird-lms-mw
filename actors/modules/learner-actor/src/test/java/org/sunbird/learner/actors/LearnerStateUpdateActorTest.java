@@ -97,6 +97,7 @@ public class LearnerStateUpdateActorTest {
         HashMap<String, Object> innerMap = new HashMap<>();
         innerMap.put(JsonKey.CONTENTS, contentList);
         innerMap.put(JsonKey.USER_ID, userId);
+        req.setManagerName(ActorOperations.ADD_CONTENT.getKey());
         req.setOperation(ActorOperations.ADD_CONTENT.getValue());
         req.setRequest(innerMap);
         subject.tell(req, probe.getRef());
@@ -123,6 +124,7 @@ public class LearnerStateUpdateActorTest {
         HashMap<String, Object> innerMap = new HashMap<>();
         innerMap.put(JsonKey.CONTENTS, contentList);
         innerMap.put(JsonKey.USER_ID, userId);
+        req.setManagerName(ActorOperations.ADD_CONTENT.getKey());
         req.setOperation(ActorOperations.ADD_CONTENT.getValue());
         req.setRequest(innerMap);
 
@@ -150,6 +152,7 @@ public class LearnerStateUpdateActorTest {
         HashMap<String, Object> innerMap = new HashMap<>();
         innerMap.put(JsonKey.CONTENTS, contentList);
         innerMap.put(JsonKey.USER_ID, userId);
+        req.setManagerName(ActorOperations.ADD_CONTENT.getKey());
         req.setOperation(ActorOperations.ADD_CONTENT.getValue());
         req.setRequest(innerMap);
 
@@ -178,6 +181,7 @@ public class LearnerStateUpdateActorTest {
         HashMap<String, Object> innerMap = new HashMap<>();
         innerMap.put(JsonKey.CONTENTS, contentList);
         innerMap.put(JsonKey.USER_ID, userId);
+        req.setManagerName(ActorOperations.ADD_CONTENT.getKey());
         req.setOperation(ActorOperations.ADD_CONTENT.getValue());
         req.setRequest(innerMap);
 
@@ -192,6 +196,7 @@ public class LearnerStateUpdateActorTest {
         TestKit probe = new TestKit(system);
         ActorRef subject = system.actorOf(props);
         Request req = new Request();
+        req.setManagerName("INVALID_OPERATION");
         req.setOperation("INVALID_OPERATION");
         subject.tell(req, probe.getRef());
         probe.expectMsgClass(ProjectCommonException.class);

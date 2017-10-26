@@ -1,7 +1,7 @@
 package org.sunbird.common.util.actorutility.impl;
 
-import org.sunbird.common.models.util.ActorUtility;
 import org.sunbird.common.util.actorutility.ActorSystem;
+import org.sunbird.common.util.actorutility.ActorUtility;
 
 /**
  * 

@@ -234,9 +234,11 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     successList.put(JsonKey.SUCCESS_RESULT, passedUserList);
     failList.put(JsonKey.FAILURE_RESULT, failedUserList);
     // process Audit Log
-    processAuditLog(courseBatchObject, ActorOperations.UPDATE_BATCH.getValue(), "", JsonKey.BATCH);
+    processAuditLog(courseBatchObject, ActorOperations.UPDATE_BATCH.getKey(),
+        ActorOperations.UPDATE_BATCH.getValue(), "", JsonKey.BATCH);
     ProjectLogger.log("method call going to satrt for ES--.....");
     Request request = new Request();
+    request.setManagerName(ActorOperations.UPDATE_COURSE_BATCH_ES.getKey());
     request.setOperation(ActorOperations.UPDATE_COURSE_BATCH_ES.getValue());
     request.getRequest().put(JsonKey.BATCH, courseBatchObject);
     ProjectLogger.log("making a call to save Course Batch data to ES");
@@ -248,6 +250,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private Boolean addUserCourses(String batchId, String courseId, String updatedBy, String userId,
       Map<String, String> additionalCourseInfo) {
 
@@ -306,6 +309,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
 
   private void insertUserCoursesToES(Map<String, Object> courseMap) {
     Request request = new Request();
+    request.setManagerName(ActorOperations.INSERT_USR_COURSES_INFO_ELASTIC.getValue());
     request.setOperation(ActorOperations.INSERT_USR_COURSES_INFO_ELASTIC.getValue());
     request.getRequest().put(JsonKey.USER_COURSES, courseMap);
     try {
@@ -478,13 +482,14 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
           ProjectLogger
               .log("Calling background job to save org data into ES" + orgResult.get(JsonKey.ID));
           Request request = new Request();
+          request.setManagerName(ActorOperations.INSERT_ORG_INFO_ELASTIC.getKey());
           request.setOperation(ActorOperations.INSERT_ORG_INFO_ELASTIC.getValue());
           request.getRequest().put(JsonKey.ORGANISATION, concurrentHashMap);
           ActorUtil.tell(request);
           successList.add(concurrentHashMap);
           // process Audit Log
-          processAuditLog(concurrentHashMap, ActorOperations.UPDATE_ORG.getValue(), "",
-              JsonKey.ORGANISATION);
+          processAuditLog(concurrentHashMap, ActorOperations.UPDATE_ORG.getKey(),
+              ActorOperations.UPDATE_ORG.getValue(), "", JsonKey.ORGANISATION);
           return;
         } catch (Exception ex) {
 
@@ -552,13 +557,14 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
           ProjectLogger.log("Calling background job to save org data into ES"
               + contentList.get(0).get(JsonKey.ID));
           Request request = new Request();
+          request.setManagerName(ActorOperations.INSERT_ORG_INFO_ELASTIC.getKey());
           request.setOperation(ActorOperations.INSERT_ORG_INFO_ELASTIC.getValue());
           request.getRequest().put(JsonKey.ORGANISATION, concurrentHashMap);
           ActorUtil.tell(request);
           successList.add(concurrentHashMap);
           // process Audit Log
-          processAuditLog(concurrentHashMap, ActorOperations.UPDATE_ORG.getValue(), "",
-              JsonKey.ORGANISATION);
+          processAuditLog(concurrentHashMap, ActorOperations.UPDATE_ORG.getKey(),
+              ActorOperations.UPDATE_ORG.getValue(), "", JsonKey.ORGANISATION);
           return;
         } catch (Exception ex) {
 
@@ -665,13 +671,14 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       orgResponse.put(JsonKey.OPERATION, ActorOperations.INSERT_ORG_INFO_ELASTIC.getValue());
       ProjectLogger.log("Calling background job to save org data into ES" + uniqueId);
       Request request = new Request();
+      request.setManagerName(ActorOperations.INSERT_ORG_INFO_ELASTIC.getKey());
       request.setOperation(ActorOperations.INSERT_ORG_INFO_ELASTIC.getValue());
       request.getRequest().put(JsonKey.ORGANISATION, concurrentHashMap);
       ActorUtil.tell(request);
       successList.add(concurrentHashMap);
       // process Audit Log
-      processAuditLog(concurrentHashMap, ActorOperations.CREATE_ORG.getValue(), "",
-          JsonKey.ORGANISATION);
+      processAuditLog(concurrentHashMap, ActorOperations.CREATE_ORG.getKey(),
+          ActorOperations.CREATE_ORG.getValue(), "", JsonKey.ORGANISATION);
     } catch (Exception ex) {
 
       ProjectLogger.log("Exception occurs  ", ex);
@@ -820,8 +827,8 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
 
 
             // process Audit Log
-            processAuditLog(userMap, ActorOperations.CREATE_USER.getValue(), updatedBy,
-                JsonKey.USER);
+            processAuditLog(userMap, ActorOperations.CREATE_USER.getKey(),
+                ActorOperations.CREATE_USER.getValue(), updatedBy, JsonKey.USER);
           } else {
             // update user record
             tempMap.remove(JsonKey.OPERATION);
@@ -852,8 +859,8 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
               continue;
             }
             // Process Audit Log
-            processAuditLog(userMap, ActorOperations.UPDATE_USER.getValue(), updatedBy,
-                JsonKey.USER);
+            processAuditLog(userMap, ActorOperations.UPDATE_USER.getKey(),
+                ActorOperations.UPDATE_USER.getValue(), updatedBy, JsonKey.USER);
           }
           // save successfully created user data
           tempMap.putAll(userMap);
@@ -870,6 +877,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
           ProjectLogger
               .log("making a call to save user data to ES in BulkUploadBackGroundJobActor");
           Request request = new Request();
+          request.setManagerName(ActorOperations.UPDATE_USER_INFO_ELASTIC.getKey());
           request.setOperation(ActorOperations.UPDATE_USER_INFO_ELASTIC.getValue());
           request.getRequest().put(JsonKey.ID, userMap.get(JsonKey.ID));
           ActorUtil.tell(request);
@@ -903,11 +911,12 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     }
   }
 
-  private void processAuditLog(Map<String, Object> dataMap, String actorOperationType,
-      String updatedBy, String objectType) {
+  private void processAuditLog(Map<String, Object> dataMap, String managerName,
+      String actorOperationType, String updatedBy, String objectType) {
     Request req = new Request();
     Response res = new Response();
-    req.setRequest_id(processId);
+    req.setRequestId(processId);
+    req.setManagerName(managerName);
     req.setOperation(actorOperationType);
     req.getRequest().put(JsonKey.REQUESTED_BY, updatedBy);
     if (objectType.equalsIgnoreCase(JsonKey.USER)) {
@@ -1342,6 +1351,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     map.put(JsonKey.REQUEST, message);
     map.put(JsonKey.RESPONSE, result);
     Request request = new Request();
+    request.setManagerName(ActorOperations.PROCESS_AUDIT_LOG.getKey());
     request.setOperation(ActorOperations.PROCESS_AUDIT_LOG.getValue());
     request.setRequest(map);
     ActorUtil.tell(request);
@@ -1379,6 +1389,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       emailTemplateMap.put(JsonKey.EMAIL_TEMPLATE_TYPE, "welcome");
 
       Request request = new Request();
+      request.setManagerName(ActorOperations.EMAIL_SERVICE.getKey());
       request.setOperation(ActorOperations.EMAIL_SERVICE.getValue());
       request.put(JsonKey.EMAIL_REQUEST, emailTemplateMap);
       ActorUtil.tell(request);

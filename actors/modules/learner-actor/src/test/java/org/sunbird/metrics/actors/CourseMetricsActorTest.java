@@ -99,6 +99,7 @@ public class CourseMetricsActorTest {
     actorMessage.put(JsonKey.REQUESTED_BY , userId);
     actorMessage.put(JsonKey.BATCH_ID , batchId);
     actorMessage.put(JsonKey.PERIOD , "fromBegining");
+    actorMessage.setManagerName(ActorOperations.COURSE_PROGRESS_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.COURSE_PROGRESS_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -118,6 +119,7 @@ public class CourseMetricsActorTest {
     actorMessage.put(JsonKey.COURSE_ID, "mclr309f39");
     actorMessage.put(JsonKey.PERIOD, "7d");
     actorMessage.put(JsonKey.REQUESTED_BY , userId);
+    actorMessage.setManagerName(ActorOperations.COURSE_CREATION_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.COURSE_CREATION_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -149,6 +151,7 @@ public class CourseMetricsActorTest {
     actorMessage.put(JsonKey.COURSE_ID, "mclr309f39_INVALID");
     actorMessage.put(JsonKey.PERIOD, "7d");
     actorMessage.put(JsonKey.REQUESTED_BY , userId + "Invalid");
+    actorMessage.setManagerName(ActorOperations.COURSE_CREATION_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.COURSE_CREATION_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());
@@ -165,6 +168,7 @@ public class CourseMetricsActorTest {
     Request actorMessage = new Request();
     actorMessage.put(JsonKey.COURSE_ID, "mclr309f39");
     actorMessage.put(JsonKey.PERIOD, "10d");
+    actorMessage.setManagerName(ActorOperations.COURSE_CREATION_METRICS.getKey());
     actorMessage.setOperation(ActorOperations.COURSE_CREATION_METRICS.getValue());
 
     subject.tell(actorMessage, probe.getRef());

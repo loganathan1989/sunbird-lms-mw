@@ -1,9 +1,4 @@
-/*package org.sunbird.common.actors.bulkupload;
-
-import akka.actor.ActorRef;
-import akka.actor.UntypedAbstractActor;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+package org.sunbird.common.actors.bulkupload;
 
 import static org.sunbird.common.util.Util.isNotNull;
 import static org.sunbird.common.util.Util.isNull;
@@ -17,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -40,8 +36,8 @@ import org.sunbird.common.request.Request;
 import org.sunbird.common.responsecode.ResponseCode;
 import org.sunbird.common.util.ActorUtil;
 import org.sunbird.common.util.AuditOperation;
-import org.sunbird.common.util.SocialMediaType;
-import org.sunbird.common.util.UserUtility;
+//import org.sunbird.common.util.SocialMediaType;
+//import org.sunbird.common.util.UserUtility;
 import org.sunbird.common.util.Util;
 import org.sunbird.common.util.Util.DbInfo;
 import org.sunbird.dto.SearchDTO;
@@ -49,11 +45,16 @@ import org.sunbird.helper.ServiceFactory;
 import org.sunbird.services.sso.SSOManager;
 import org.sunbird.services.sso.SSOServiceFactory;
 
-*//**
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import akka.actor.UntypedAbstractActor;
+
+/**
  * This actor will handle bulk upload operation .
  *
  * @author Amit Kumar
- *//*
+ */
 public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
 
   private String processId = "";
@@ -247,6 +248,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private Boolean addUserCourses(String batchId, String courseId, String updatedBy, String userId,
       Map<String, String> additionalCourseInfo) {
 
@@ -763,7 +765,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
               failureUserReq.add(userMap);
               continue;
             }
-            SocialMediaType.validateSocialMedia(webPages);
+            //SocialMediaType.validateSocialMedia(webPages);
             userMap.put(JsonKey.WEB_PAGES, webPages);
           }
           // convert userName,provide,loginId,externalId.. value to lowercase
@@ -783,7 +785,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
             list.add(JsonKey.PUBLIC);
             tempMap.put(JsonKey.ROLES, list);
             try {
-              UserUtility.encryptUserData(tempMap);
+              //UserUtility.encryptUserData(tempMap);
             } catch (Exception ex) {
               ProjectLogger.log(
                   "Exception occurred while bulk user upload in BulkUploadBackGroundJobActor during data encryption :",
@@ -829,7 +831,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
             tempMap.put(JsonKey.UPDATED_BY, updatedBy);
             tempMap.put(JsonKey.UPDATED_DATE, ProjectUtil.getFormattedDate());
             try {
-              UserUtility.encryptUserData(tempMap);
+              //UserUtility.encryptUserData(tempMap);
             } catch (Exception ex) {
               ProjectLogger.log(
                   "Exception occurred while bulk user upload in BulkUploadBackGroundJobActor during data encryption :",
@@ -906,7 +908,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       String updatedBy, String objectType) {
     Request req = new Request();
     Response res = new Response();
-    req.setRequest_id(processId);
+    req.setRequestId(processId);
     req.setOperation(actorOperationType);
     req.getRequest().put(JsonKey.REQUESTED_BY, updatedBy);
     if (objectType.equalsIgnoreCase(JsonKey.USER)) {
@@ -970,11 +972,11 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     Map<String, Object> map = new HashMap<>();
     Map<String, Object> reqMap = new HashMap<>();
     reqMap.put(JsonKey.USER_ID, requestMap.get(JsonKey.USER_ID));
-    
+    /*
      * update table for userName,phone,email for each of these parameter insert a record into db for
      * username update isVerified as true and for others param this will be false once verified will
      * update this flag to true
-     
+     */
 
     map.put(JsonKey.USER_ID, requestMap.get(JsonKey.ID));
     map.put(JsonKey.IS_VERIFIED, false);
@@ -1149,12 +1151,12 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
         }
         userMap.put(JsonKey.CREATED_DATE, ProjectUtil.getFormattedDate());
         userMap.put(JsonKey.STATUS, ProjectUtil.Status.ACTIVE.getValue());
-        *//**
+        /**
          * set role as PUBLIC by default if role is empty in request body. And if roles are coming
          * in request body, then check for PUBLIC role , if not present then add PUBLIC role to the
          * list
          *
-         *//*
+         */
 
         if (null != userMap.get(JsonKey.ROLES)) {
           List<String> roles = (List<String>) userMap.get(JsonKey.ROLES);
@@ -1266,11 +1268,11 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
 
   }
 
-  *//**
+  /**
    * This method will make some requested key value as lower case.
    * 
    * @param map Request
-   *//*
+   */
   public static void updateMapSomeValueTOLowerCase(Map<String, Object> map) {
     if (map.get(JsonKey.SOURCE) != null) {
       map.put(JsonKey.SOURCE, ((String) map.get(JsonKey.SOURCE)).toLowerCase());
@@ -1328,7 +1330,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       try {
         Map<String, Object> map = new HashMap<>();
         map.putAll((Map<String, Object>) message.getRequest().get(JsonKey.USER));
-        UserUtility.encryptUserData(map);
+        //UserUtility.encryptUserData(map);
         message.getRequest().put(JsonKey.USER, map);
       } catch (Exception ex) {
         ProjectLogger.log(
@@ -1385,4 +1387,3 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
   }
 
 }
-*/

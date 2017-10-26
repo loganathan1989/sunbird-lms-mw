@@ -1,10 +1,5 @@
 package org.sunbird.common.quartz.scheduler;
 
-import akka.actor.ActorRef;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,11 +8,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.sunbird.cassandra.CassandraOperation;
-import org.sunbird.common.actors.RequestRouterActor;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
 import org.sunbird.common.models.util.JsonKey;
@@ -28,6 +23,11 @@ import org.sunbird.common.request.Request;
 import org.sunbird.common.util.ActorUtil;
 import org.sunbird.common.util.Util;
 import org.sunbird.helper.ServiceFactory;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Created by arvind on 30/8/17.
@@ -72,6 +72,7 @@ public class MetricsReportJob implements Job {
             List<List<Object>> data = mapper.readValue(jsonString, typeReference);
             // assign the back ground task to background job actor ...
             Request backGroundRequest = new Request();
+            backGroundRequest.setManagerName(ActorOperations.FILE_GENERATION_AND_UPLOAD.getKey());
             backGroundRequest.setOperation(ActorOperations.FILE_GENERATION_AND_UPLOAD.getValue());
 
             Map<String, Object> innerMap = new HashMap<>();
@@ -111,6 +112,7 @@ public class MetricsReportJob implements Job {
           if (thirtyMinutesBefore.compareTo(format.parse(updatedDate)) >= 0) {
 
             Request backGroundRequest = new Request();
+            backGroundRequest.setManagerName(ActorOperations.SEND_MAIL.getKey());
             backGroundRequest.setOperation(ActorOperations.SEND_MAIL.getValue());
 
             Map<String, Object> innerMap = new HashMap<>();

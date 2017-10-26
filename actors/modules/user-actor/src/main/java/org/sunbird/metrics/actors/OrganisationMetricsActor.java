@@ -122,6 +122,7 @@ public class OrganisationMetricsActor extends BaseMetricsActor {
 
     // assign the back ground task to background job actor ...
     Request backGroundRequest = new Request();
+    backGroundRequest.setManagerName(ActorOperations.PROCESS_DATA.getKey());
     backGroundRequest.setOperation(ActorOperations.PROCESS_DATA.getValue());
 
     Map<String, Object> innerMap = new HashMap<>();
@@ -212,6 +213,7 @@ public class OrganisationMetricsActor extends BaseMetricsActor {
 
     // assign the back ground task to background job actor ...
     Request backGroundRequest = new Request();
+    backGroundRequest.setManagerName(ActorOperations.PROCESS_DATA.getKey());
     backGroundRequest.setOperation(ActorOperations.PROCESS_DATA.getValue());
 
     Map<String, Object> innerMap = new HashMap<>();
@@ -796,6 +798,7 @@ public class OrganisationMetricsActor extends BaseMetricsActor {
 
       saveData(csvRecords, requestId, "Creation Report");
       Request backGroundRequest = new Request();
+      backGroundRequest.setManagerName(ActorOperations.FILE_GENERATION_AND_UPLOAD.getKey());
       backGroundRequest.setOperation(ActorOperations.FILE_GENERATION_AND_UPLOAD.getValue());
 
       Map<String, Object> innerMap = new HashMap<>();
@@ -858,6 +861,7 @@ public class OrganisationMetricsActor extends BaseMetricsActor {
           + System.currentTimeMillis() + FILENAMESEPARATOR + periodStr;
       saveData(csvRecords, requestId, "Consumption Report");
       Request backGroundRequest = new Request();
+      backGroundRequest.setManagerName(ActorOperations.FILE_GENERATION_AND_UPLOAD.getKey());
       backGroundRequest.setOperation(ActorOperations.FILE_GENERATION_AND_UPLOAD.getValue());
 
       Map<String, Object> innerMap = new HashMap<>();
