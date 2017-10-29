@@ -55,6 +55,7 @@ public class BackgroundJobManager extends UntypedAbstractActor {
   }
 
   private CassandraOperation cassandraOperation = ServiceFactory.getInstance();
+  private Util.DbInfo userSkillDbInfo = Util.dbInfoMap.get(JsonKey.USER_SKILL_DB);
 
   @Override
   public void onReceive(Object message) throws Throwable {
@@ -589,6 +590,11 @@ public class BackgroundJobManager extends UntypedAbstractActor {
         map.put(JsonKey.EMAIL, maskingService.maskEmail(decService.decryptData(email)));
       }
 
+      // add the skills column into ES
+      Response skillresponse = cassandraOperation.getRecordsByProperty(userSkillDbInfo.getKeySpace() , userSkillDbInfo.getTableName(), JsonKey.USER_ID , userId);
+      List<Map<String,Object>> responseList = (List<Map<String, Object>>) skillresponse.get(JsonKey.RESPONSE);
+      map.put(JsonKey.SKILLS , responseList);
+
       insertDataToElastic(ProjectUtil.EsIndex.sunbird.getIndexName(),
           ProjectUtil.EsType.user.getTypeName(), userId, map);
       ProjectLogger.log("saving completed user to es userId : " + userId);
@@ -807,10 +813,12 @@ public class BackgroundJobManager extends UntypedAbstractActor {
   private void insertUserNotesToEs(Request actorMessage) {
     ProjectLogger.log("Calling method to save inside Es==");
     Map<String, Object> noteMap = (Map<String, Object>) actorMessage.getRequest().get(JsonKey.NOTE);
-    if (ProjectUtil.isNotNull(noteMap)) {
+    if (ProjectUtil.isNotNull(noteMap) && noteMap.size()>0) {
       String id = (String) noteMap.get(JsonKey.ID);
       insertDataToElastic(ProjectUtil.EsIndex.sunbird.getIndexName(),
           ProjectUtil.EsType.usernotes.getTypeName(), id, noteMap);
+    }else {
+      ProjectLogger.log("No data found to save inside Es for Notes--", LoggerEnum.INFO.name());
     }
   }
 

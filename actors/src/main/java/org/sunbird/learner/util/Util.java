@@ -10,10 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.apache.thrift.transport.TTransportException;
-import org.cassandraunit.CassandraCQLUnit;
-import org.cassandraunit.dataset.cql.ClassPathCQLDataSet;
-import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -155,6 +151,8 @@ public class Util {
       dbInfoMap.put(JsonKey.USER_BADGES_DB, getDbInfoObject(KEY_SPACE_NAME , "user_badge"));
       dbInfoMap.put(JsonKey.USER_NOTES_DB, getDbInfoObject(KEY_SPACE_NAME, "user_notes"));
       dbInfoMap.put(JsonKey.MEDIA_TYPE_DB, getDbInfoObject(KEY_SPACE_NAME, "media_type"));
+      dbInfoMap.put(JsonKey.USER_SKILL_DB , getDbInfoObject(KEY_SPACE_NAME, "user_skills"));
+      dbInfoMap.put(JsonKey.SKILLS_LIST_DB , getDbInfoObject(KEY_SPACE_NAME, "skills"));
     }
     
     
@@ -181,7 +179,7 @@ public class Util {
      * provided environment variable , if environment variable values 
      * are not set then connection will be established from property file.
      */
-    public static void checkCassandraDbConnections() {
+    public static void checkCassandraDbConnections(String keySpace) {
 
       PropertiesCache propertiesCache = PropertiesCache.getInstance();
 
@@ -189,22 +187,22 @@ public class Util {
       if (ProjectUtil.isStringNullOREmpty(cassandraMode) || cassandraMode
           .equalsIgnoreCase(JsonKey.EMBEDDED_MODE)) {
 
-          // configure the Embeddee mode and return true here ....
+          // configure the Embedded mode and return true here ....
           CassandraConnectionManager cassandraConnectionManager = CassandraConnectionMngrFactory
               .getObject(cassandraMode);
-          boolean result = cassandraConnectionManager.createConnection(null , null , null ,null, KEY_SPACE_NAME);
+          boolean result = cassandraConnectionManager.createConnection(null , null , null ,null, keySpace);
         if (result) {
           ProjectLogger
               .log("CONNECTION CREATED SUCCESSFULLY FOR IP:" + " : KEYSPACE :"
-                      + KEY_SPACE_NAME,
+                      + keySpace,
                   LoggerEnum.INFO.name());
         } else {
           ProjectLogger
-              .log("CONNECTION CREATION FAILED FOR IP: " +  " : KEYSPACE :" + KEY_SPACE_NAME);
+              .log("CONNECTION CREATION FAILED FOR IP: " +  " : KEYSPACE :" + keySpace);
         }
 
         } else if (cassandraMode.equalsIgnoreCase(JsonKey.STANDALONE_MODE)) {
-          if (readConfigFromEnv()) {
+          if (readConfigFromEnv(keySpace)) {
             ProjectLogger.log("db connection is created from System env variable.");
             return;
           }
@@ -249,7 +247,7 @@ public class Util {
      * This method will read the configuration from System variable.
      * @return boolean
      */
-    public static boolean readConfigFromEnv() {
+    public static boolean readConfigFromEnv(String keyspace) {
         boolean response = false;
         String ips = System.getenv(JsonKey.SUNBIRD_CASSANDRA_IP);
         String envPort = System.getenv(JsonKey.SUNBIRD_CASSANDRA_PORT);
@@ -267,11 +265,11 @@ public class Util {
             String ip = ipList[i];
             String port = portList[i];
             try {
-                boolean result = cassandraConnectionManager.createConnection(ip, port, userName, password, KEY_SPACE_NAME);
+                boolean result = cassandraConnectionManager.createConnection(ip, port, userName, password, keyspace);
                 if (result) {
-                    ProjectLogger.log("CONNECTION CREATED SUCCESSFULLY FOR IP: " + ip + " : KEYSPACE :" + KEY_SPACE_NAME, LoggerEnum.INFO.name());
+                    ProjectLogger.log("CONNECTION CREATED SUCCESSFULLY FOR IP: " + ip + " : KEYSPACE :" + keyspace, LoggerEnum.INFO.name());
                 } else {
-                    ProjectLogger.log("CONNECTION CREATION FAILED FOR IP: " + ip + " : KEYSPACE :" + KEY_SPACE_NAME, LoggerEnum.INFO.name());
+                    ProjectLogger.log("CONNECTION CREATION FAILED FOR IP: " + ip + " : KEYSPACE :" + keyspace, LoggerEnum.INFO.name());
                 }
                 response = true;
             } catch (ProjectCommonException ex) {
@@ -598,7 +596,8 @@ public class Util {
 
   public static void main(String[] args) {
     System.out.println("MAIN STARTED");
-    checkCassandraDbConnections();
+    checkCassandraDbConnections(JsonKey.SUNBIRD);
+    checkCassandraDbConnections(JsonKey.SUNBIRD_PLUGIN);
     System.out.println("MAIN END");
   }
     

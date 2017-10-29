@@ -3,7 +3,6 @@ package org.sunbird.learner.actors.bulkupload;
 import static org.sunbird.learner.util.Util.isNotNull;
 import static org.sunbird.learner.util.Util.isNull;
 
-import akka.actor.ActorRef;
 import akka.actor.UntypedAbstractActor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +40,7 @@ import org.sunbird.dto.SearchDTO;
 import org.sunbird.helper.ServiceFactory;
 import org.sunbird.learner.util.ActorUtil;
 import org.sunbird.learner.util.AuditOperation;
+import org.sunbird.learner.util.DataCacheHandler;
 import org.sunbird.learner.util.SocialMediaType;
 import org.sunbird.learner.util.UserUtility;
 import org.sunbird.learner.util.Util;
@@ -388,6 +388,17 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     Object[] orgContactList = null;
     String contactDetails = null;
 
+    if(concurrentHashMap.containsKey(JsonKey.ORG_TYPE)
+        && !ProjectUtil.isStringNullOREmpty((String) concurrentHashMap.get(JsonKey.ORG_TYPE))){
+      String orgTypeId = validateOrgType((String) concurrentHashMap.get(JsonKey.ORG_TYPE));
+      if(null == orgTypeId){
+        concurrentHashMap.put(JsonKey.ERROR_MSG, "Invalid OrgType.");
+        failureList.add(concurrentHashMap);
+        return;
+      }else{
+       concurrentHashMap.put(JsonKey.ORG_TYPE_ID, orgTypeId);
+      }
+    }
     if (isNull(concurrentHashMap.get(JsonKey.ORGANISATION_NAME)) || ProjectUtil
         .isStringNullOREmpty((String) concurrentHashMap.get(JsonKey.ORGANISATION_NAME))) {
       ProjectLogger.log("orgName is mandatory for org creation.");
@@ -680,6 +691,32 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
 
   }
 
+  private String validateOrgType(String orgType) {
+    String orgTypeId = null;
+    try{
+      if (!ProjectUtil
+          .isStringNullOREmpty((String) DataCacheHandler.getOrgTypeMap().get(orgType.toLowerCase()))) {
+        orgTypeId = DataCacheHandler.getOrgTypeMap().get(orgType.toLowerCase());
+      } else {
+        Util.DbInfo orgTypeDbInfo = Util.dbInfoMap.get(JsonKey.ORG_TYPE_DB);
+        Response response = cassandraOperation.getAllRecords(orgTypeDbInfo.getKeySpace(),
+            orgTypeDbInfo.getTableName());
+        List<Map<String, Object>> list = (List<Map<String, Object>>) response.get(JsonKey.RESPONSE);
+        if (!list.isEmpty()) {
+          for (Map<String, Object> map : list) {
+            if((((String)map.get(JsonKey.NAME)).toLowerCase()).equalsIgnoreCase(orgType.toLowerCase())){
+              orgTypeId = (String)map.get(JsonKey.ID);
+              DataCacheHandler.getOrgTypeMap().put(((String)map.get(JsonKey.NAME)).toLowerCase(), (String)map.get(JsonKey.ID));
+            }
+          }
+        }
+      }
+    }catch(Exception ex){
+      ProjectLogger.log("Exception occurred while getting orgTypeId from OrgType", ex);
+    }
+    return orgTypeId;
+  }
+
   private Map<String, Object> elasticSearchComplexSearch(Map<String, Object> filters, String index,
       String type) {
 
@@ -756,9 +793,9 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
               ObjectMapper mapper = new ObjectMapper();
               webPages = mapper.readValue(webPageString, List.class);
             } catch (Exception ex) {
-              ProjectLogger.log("Unable to parse Org contact Details - OrgBulkUpload.", ex);
+              ProjectLogger.log("Unable to parse Web Page Details ", ex);
               userMap.put(JsonKey.ERROR_MSG,
-                  "Unable to parse Org contact Details - OrgBulkUpload.");
+                  "Unable to parse Web Page Details ");
               failureUserReq.add(userMap);
               continue;
             }
@@ -886,12 +923,18 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       }
     }
     // Insert record to BulkDb table
+    //After Successful completion of bulk upload process , encrypt the success and failure result and delete the user data(csv file data)
     Map<String, Object> map = new HashMap<>();
     map.put(JsonKey.ID, processId);
-    map.put(JsonKey.SUCCESS_RESULT, convertMapToJsonString(successUserReq));
-    map.put(JsonKey.FAILURE_RESULT, convertMapToJsonString(failureUserReq));
+    try {
+      map.put(JsonKey.SUCCESS_RESULT, UserUtility.encryptData(convertMapToJsonString(successUserReq)));
+      map.put(JsonKey.FAILURE_RESULT, UserUtility.encryptData(convertMapToJsonString(failureUserReq)));
+    } catch (Exception e1) {
+      ProjectLogger.log("Exception occurred while encrypting success and failure result in bulk upload process : ", e1);
+    }
     map.put(JsonKey.PROCESS_END_TIME, ProjectUtil.getFormattedDate());
     map.put(JsonKey.STATUS, ProjectUtil.BulkProcessStatus.COMPLETED.getValue());
+    map.put(JsonKey.DATA, "");
     try {
       cassandraOperation.updateRecord(bulkDb.getKeySpace(), bulkDb.getTableName(), map);
     } catch (Exception e) {
@@ -905,8 +948,9 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       String updatedBy, String objectType) {
     Request req = new Request();
     Response res = new Response();
-    req.setRequest_id(processId);
+    req.setRequestId(processId);
     req.setOperation(actorOperationType);
+    dataMap.remove("header");
     req.getRequest().put(JsonKey.REQUESTED_BY, updatedBy);
     if (objectType.equalsIgnoreCase(JsonKey.USER)) {
       req.getRequest().put(JsonKey.USER, dataMap);
@@ -916,7 +960,6 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       res.getResult().put(JsonKey.ORGANISATION_ID, dataMap.get(JsonKey.ID));
     } else if (objectType.equalsIgnoreCase(JsonKey.BATCH)) {
       req.getRequest().put(JsonKey.BATCH, dataMap);
-      dataMap.remove("header");
       res.getResult().put(JsonKey.BATCH_ID, dataMap.get(JsonKey.ID));
     }
     saveAuditLog(res, actorOperationType, req);

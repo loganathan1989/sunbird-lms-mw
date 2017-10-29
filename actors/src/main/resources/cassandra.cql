@@ -573,3 +573,38 @@ insert into media_type(id,name) values('blog','blog');
 //Oct 12th
 ALTER TABLE sunbird.user ADD tempPassword text;
 ALTER TABLE sunbird.user ADD currentLoginTime text;
+//Oct 18th
+UPDATE sunbird.media_type SET name = 'Facebook' where id = 'fb';
+UPDATE sunbird.media_type SET name = 'Twitter' where id = 'twitter';
+UPDATE sunbird.media_type SET name = 'LinkedIn' where id = 'in';
+UPDATE sunbird.media_type SET name = 'Blog' where id = 'blog';
+
+ALTER TABLE sunbird.bulk_upload_process ADD retryCount int;
+
+// userSkill table to store the user skills - Oct 18, 2017 ---
+/*
+creation of id = one way hash of (userId##skillnametolowercase)
+*/
+CREATE TABLE IF NOT EXISTS sunbird.user_skills(id text, userId  text, skillname text,skillnametolowercase text, addedby text, addedat text, endorsementcount int ,endorsers Map<text, text>, PRIMARY KEY (id));
+CREATE INDEX inx_us_userId ON sunbird.user_skills(userId);
+
+// skills table - Oct 18, 2017 ---
+/*
+creation of id = one way hash of (userId##skillnametolowercase)
+*/
+CREATE TABLE IF NOT EXISTS sunbird.skills(id text,skills list<text>, PRIMARY KEY (id));
+ALTER TABLE sunbird.organisation ADD orgTypeId text;
+
+
+
+
+
+//Announcement apis -27th Oct 
+CREATE KEYSPACE IF NOT EXISTS sunbirdplugin WITH replication = {'class':'SimpleStrategy','replication_factor':1};
+//CREATE TYPE IF NOT EXISTS sunbirdplugin.attachment (id text,filename text,mimetype text);
+CREATE TABLE sunbirdplugin.announcement (id text,userid text,sourceid text,details map<text, text>,links list<text>,attachments list<text>,target text,sentcount int,priority text,expiry text,status text,createddate text,updateddate text, PRIMARY KEY (id));
+CREATE TABLE sunbirdplugin.attachment (id text,file text,filename text,mimetype text,createdby text,status text,createddate text, PRIMARY KEY (id));
+CREATE TABLE sunbirdplugin.metrics (id text,userid text,announcementid text,activity text,channel text,createddate text, PRIMARY KEY (id));
+CREATE TABLE sunbirdplugin.announcementtype (id text,rootorgid text,name text,status text,createddate text, PRIMARY KEY (id));
+CREATE TABLE sunbirdplugin.announcementauth (id text,userid text,rootorgid text,permissions map<text, text>,status text,createddate text, PRIMARY KEY (id));
+
