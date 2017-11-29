@@ -22,7 +22,6 @@ import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
 import org.sunbird.common.models.util.JsonKey;
-import org.sunbird.common.models.util.ProjectUtil;
 import org.sunbird.common.models.util.ProjectUtil.EsIndex;
 import org.sunbird.common.models.util.ProjectUtil.EsType;
 import org.sunbird.common.models.util.datasecurity.OneWayHashing;
@@ -35,10 +34,10 @@ import org.sunbird.learner.util.Util;
  * Created by arvind on 24/10/17.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SkillmanagementActorTest {
+public class SkillManagementActorTest {
 
   static ActorSystem system;
-  final static Props props = Props.create(SkillmanagementActor.class);
+  final static Props props = Props.create(SkillManagementActor.class);
   static TestActorRef<LearnerStateActor> ref;
   private static CassandraOperation cassandraOperation = ServiceFactory.getInstance();
   private static Util.DbInfo userSkillDbInfo = Util.dbInfoMap.get(JsonKey.USER_SKILL_DB);

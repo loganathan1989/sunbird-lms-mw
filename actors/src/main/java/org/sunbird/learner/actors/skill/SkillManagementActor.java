@@ -32,7 +32,7 @@ import org.sunbird.learner.util.Util;
  * Class to provide functionality for Add and Endorse the user skills .
  * Created by arvind on 18/10/17.
  */
-public class SkillmanagementActor extends UntypedAbstractActor {
+public class SkillManagementActor extends UntypedAbstractActor {
 
   private CassandraOperation cassandraOperation = ServiceFactory.getInstance();
   private Util.DbInfo userSkillDbInfo = Util.dbInfoMap.get(JsonKey.USER_SKILL_DB);
@@ -81,6 +81,7 @@ public class SkillmanagementActor extends UntypedAbstractActor {
    * Method will return all the list of skills , it is type of reference data ...
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void getSkillsList(Request actorMessage) {
 
     ProjectLogger.log("SkillmanagementActor-getSkillsList called");
@@ -101,6 +102,7 @@ public class SkillmanagementActor extends UntypedAbstractActor {
    * Method to get the list of skills of the user on basis of UserId ...
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void getSkill(Request actorMessage) {
 
     ProjectLogger.log("SkillmanagementActor-getSkill called");
@@ -124,7 +126,7 @@ public class SkillmanagementActor extends UntypedAbstractActor {
     }
     List<Map<String , Object>> skillList = (List<Map<String , Object>>)result.get(JsonKey.CONTENT);
 
-    Map<String , Object> skillMap = new HashMap();
+    Map<String, Object> skillMap = new HashMap<String, Object>();
     if(! skillList.isEmpty()){
       skillMap = skillList.get(0);
     }
@@ -139,6 +141,7 @@ public class SkillmanagementActor extends UntypedAbstractActor {
    * Method to add or endorse the user skill ...
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void endorseSkill(Request actorMessage) {
 
     ProjectLogger.log("SkillmanagementActor-endorseSkill called");
@@ -234,6 +237,7 @@ public class SkillmanagementActor extends UntypedAbstractActor {
     updateSkillsList(skillset);
   }
 
+  @SuppressWarnings("unchecked")
   private void updateSkillsList(CopyOnWriteArraySet<String> skillset) {
 
     Map<String , Object> skills = new HashMap<>();
@@ -246,7 +250,7 @@ public class SkillmanagementActor extends UntypedAbstractActor {
       skillsList = (List<String>) skills.get(JsonKey.SKILLS);
 
     }else{
-      // craete new Entry into the
+      // create new Entry into the
       skillsList = new ArrayList<>();
     }
 
