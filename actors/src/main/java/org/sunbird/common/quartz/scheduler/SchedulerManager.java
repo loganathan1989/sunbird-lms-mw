@@ -14,11 +14,11 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerEnum;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.metrics.actors.MetricsJobScheduler;
 
 
@@ -48,7 +48,7 @@ public class SchedulerManager {
       Thread.sleep(240000);
       boolean isEmbedded = false;
       Properties configProp = null;
-      String embeddVal = System.getenv(JsonKey.SUNBIRD_QUARTZ_MODE);
+      String embeddVal = ConfigUtil.config.getString(JsonKey.SUNBIRD_QUARTZ_MODE);
       if (JsonKey.EMBEDDED.equalsIgnoreCase(embeddVal)) {
         isEmbedded = true;
       } else {
@@ -72,7 +72,7 @@ public class SchedulerManager {
       // server time is set in UTC so all scheduler need to be manage based on that time only.
       Trigger trigger = TriggerBuilder.newTrigger().withIdentity("schedulertrigger", identifier)
           .withSchedule(CronScheduleBuilder
-              .cronSchedule(PropertiesCache.getInstance().getProperty("quartz_course_batch_timer")))
+              .cronSchedule(ConfigUtil.config.getString(JsonKey.COURSE_BATCH_TIMER)))
           .build();
       try {
         if (scheduler.checkExists(job.getKey())) {
@@ -95,7 +95,7 @@ public class SchedulerManager {
       Trigger uploadTrigger =
           TriggerBuilder.newTrigger().withIdentity("uploadVerifyTrigger", identifier)
               .withSchedule(CronScheduleBuilder
-                  .cronSchedule(PropertiesCache.getInstance().getProperty("quartz_upload_timer")))
+                  .cronSchedule(ConfigUtil.config.getString(JsonKey.UPLOAD_TIMER)))
               .build();
       try {
         if (scheduler.checkExists(uploadVerifyJob.getKey())) {
@@ -119,7 +119,7 @@ public class SchedulerManager {
       Trigger coursePublishedTrigger =
           TriggerBuilder.newTrigger().withIdentity("coursePublishedTrigger", identifier)
               .withSchedule(CronScheduleBuilder.cronSchedule(
-                  PropertiesCache.getInstance().getProperty("quartz_course_publish_timer")))
+                  ConfigUtil.config.getString(JsonKey.COURSE_PUBLISH_TIMER)))
               .build();
       try {
         if (scheduler.checkExists(coursePublishedJob.getKey())) {
@@ -145,7 +145,7 @@ public class SchedulerManager {
       Trigger metricsReportRetryTrigger =
           TriggerBuilder.newTrigger().withIdentity("metricsReportRetryTrigger", identifier)
               .withSchedule(CronScheduleBuilder.cronSchedule(
-                  PropertiesCache.getInstance().getProperty("quartz_matrix_report_timer")))
+                  ConfigUtil.config.getString(JsonKey.MATRIX_REPORT_TIMER)))
               .build();
       try {
         if (scheduler.checkExists(metricsReportJob.getKey())) {
@@ -170,7 +170,7 @@ public class SchedulerManager {
       Trigger metricsTrigger =
           TriggerBuilder.newTrigger().withIdentity("metricsTrigger", identifier)
               .withSchedule(CronScheduleBuilder
-                  .cronSchedule(PropertiesCache.getInstance().getProperty("quartz_metrics_timer")))
+                  .cronSchedule(ConfigUtil.config.getString(JsonKey.METRICS_TIMER)))
               .build();
       try {
         if (scheduler.checkExists(metricsJob.getKey())) {
@@ -200,27 +200,23 @@ public class SchedulerManager {
    */
   public Properties setUpClusterMode() throws Exception {
     Properties configProp = new Properties();
-    InputStream in = this.getClass().getClassLoader().getResourceAsStream(file);
-    String host = System.getenv(JsonKey.SUNBIRD_PG_HOST);
-    String port = System.getenv(JsonKey.SUNBIRD_PG_PORT);
-    String db = System.getenv(JsonKey.SUNBIRD_PG_DB);
-    String username = System.getenv(JsonKey.SUNBIRD_PG_USER);
-    String password = System.getenv(JsonKey.SUNBIRD_PG_PASSWORD);
+    String host = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_HOST);
+    String port = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_PORT);
+    String db = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_DB);
+    String username = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_USER);
+    String password = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_PASSWORD);
     ProjectLogger
-        .log("Environment variable value for PostGress SQl= host, port,db,username,password " + host
+        .log("Settings for PostGres SQl= host, port,db,username,password " + host
             + " ," + port + "," + db + "," + username + "," + password, LoggerEnum.INFO.name());
     if (!ProjectUtil.isStringNullOREmpty(host) && !ProjectUtil.isStringNullOREmpty(port)
         && !ProjectUtil.isStringNullOREmpty(db) && !ProjectUtil.isStringNullOREmpty(username)
         && !ProjectUtil.isStringNullOREmpty(password)) {
-      ProjectLogger.log("Taking Postgres value from Environment variable...",
-          LoggerEnum.INFO.name());
-      configProp.load(in);
       configProp.put("org.quartz.dataSource.MySqlDS.URL",
           "jdbc:postgresql://" + host + ":" + port + "/" + db);
       configProp.put("org.quartz.dataSource.MySqlDS.user", username);
       configProp.put("org.quartz.dataSource.MySqlDS.password", password);
     } else {
-      ProjectLogger.log("Environment variable is not set for postgres SQl.",
+      ProjectLogger.log("Configuration is not set for postgres SQl.",
           LoggerEnum.INFO.name());
       configProp = null;
     }

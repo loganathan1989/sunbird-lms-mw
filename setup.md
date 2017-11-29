@@ -33,29 +33,28 @@
     13. sunbird_sso_password: keycloak password
     14. sunbird_sso_client_id: key cloak client id
     15. sunbird_sso_client_secret : keycloak client secret (not mandatory)
-    16. ekstep_content_search_base_url : provide base url for EkStep content search
-    17. ekstep_authorization : provide authorization for value for content search
-    18. sunbird_pg_host: postgres host name or ip
-    19. sunbird_pg_port: postgres port number
-    20. sunbird_pg_db: postgres db name
-    21. sunbird_pg_user: postgres db user name
-    22. sunbird_pg_password: postgress db password 
-    23. sunbird_installation
-    24. ekstep_api_base_url
-    25. sunbird_mail_server_host
-    26. sunbird_mail_server_port
-    27. sunbird_mail_server_username
-    28. sunbird_mail_server_password
-    29. sunbird_mail_server_from_email
-    30. sunbird_account_name : account name of azure blob storage.
-    31. sunbird_account_key : azure blob storage account key
-    32. sunbird_quartz_mode: put this value {"embedded" to run quartz without any data base, "any other value" to run with postgres db }
-    33. sunbird_encryption_key
-    34. sunbird_encryption_mode : mode value is either local or remote
-    35. sunbird_sso_publickey : sso public key
-    36. sunbird_env_logo_url : logo url for sending email.(http://www.paramountias.com/media/images/current-affairs/diksha-portal.jpg) 
-    37. sunird_web_url : web page url
-    38. sunbird_app_url : paly store url to downlaod the app
+    16. ekstep_authorization : provide authorization for value for content search
+    17. sunbird_pg_host: postgres host name or ip
+    18. sunbird_pg_port: postgres port number
+    19. sunbird_pg_db: postgres db name
+    20. sunbird_pg_user: postgres db user name
+    21. sunbird_pg_password: postgress db password 
+    22. sunbird_installation
+    23. ekstep_api_base_url
+    24. sunbird_mail_server_host
+    25. sunbird_mail_server_port
+    26. sunbird_mail_server_username
+    27. sunbird_mail_server_password
+    28. sunbird_mail_server_from_email
+    29. sunbird_account_name : account name of azure blob storage.
+    30. sunbird_account_key : azure blob storage account key
+    31. sunbird_quartz_mode: put this value {"embedded" to run quartz without any data base, "any other value" to run with postgres db }
+    32. sunbird_encryption_key
+    33. sunbird_encryption_mode : mode value is either local or remote
+    34. sunbird_sso_publickey : sso public key
+    35. sunbird_env_logo_url : logo url for sending email.(http://www.paramountias.com/media/images/current-affairs/diksha-portal.jpg) 
+    36. sunird_web_url : web page url
+    37. sunbird_app_url : paly store url to downlaod the app
 	
 ## Do the below env setup , if you are planing to run background actor in remote mode.
 	1. sunbird_background_actor_host: host running for learner background actor
@@ -63,7 +62,7 @@
 	
 ## Do the below env setup , to start a actor system on a machine {"RemoteMiddlewareActorSystem" it will start Normal Actor System on that machine,             ##"BackGroundRemoteMiddlewareActorSystem" , it will start background actor}.
 
-   1.  actor_service_name : actor system name to start{values are "RemoteMiddlewareActorSystem" , "BackGroundRemoteMiddlewareActorSystem"}
+   1.  sunbird_actor_system_name : actor system name to start{values are "RemoteMiddlewareActorSystem" , "BackGroundRemoteMiddlewareActorSystem"}
 
 ## Build
 1. Clone the repository "sunbird-lms-mw"

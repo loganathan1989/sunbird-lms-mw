@@ -11,11 +11,11 @@ import org.sunbird.common.Constants;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.HttpUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.responsecode.ResponseCode;
 import org.sunbird.helper.ServiceFactory;
@@ -118,14 +118,11 @@ public class CourseManagementActor extends UntypedAbstractActor {
     String resposne = null;
     try {
 
-      String ekStepBaseUrl = System.getenv(JsonKey.EKSTEP_BASE_URL);
-      if (ProjectUtil.isStringNullOREmpty(ekStepBaseUrl)) {
-        ekStepBaseUrl = PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_BASE_URL);
-      }
+      String ekStepBaseUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
 
       resposne = HttpUtil.sendPostRequest(
           ekStepBaseUrl
-              + PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_COURSE_PUBLISH_URL) + "/"
+              + ConfigUtil.config.getString(JsonKey.EKSTEP_COURSE_PUBLISH_URL) + "/"
               + (String) req.get(JsonKey.COURSE_ID),
           coursePublishedBody.replace("userId", updatedBy), headers);
     } catch (Exception e) {

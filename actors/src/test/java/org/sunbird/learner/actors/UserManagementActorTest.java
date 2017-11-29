@@ -24,10 +24,10 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.models.util.datasecurity.EncryptionService;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.responsecode.ResponseCode;
@@ -49,7 +49,6 @@ public class UserManagementActorTest {
 
   static ActorSystem system;
   static CassandraOperation operation = ServiceFactory.getInstance();
-  static PropertiesCache cach = PropertiesCache.getInstance();
   final static Props props = Props.create(UserManagementActor.class);
   final static Props orgProps = Props.create(OrganisationManagementActor.class);
   static EncryptionService encryptionService = org.sunbird.common.models.util.datasecurity.impl.ServiceFactory.getEncryptionServiceInstance(null);
@@ -74,7 +73,7 @@ public class UserManagementActorTest {
   @BeforeClass
   public static void setUp() {
     Application.startLocalActorSystem();
-    encryption = PropertiesCache.getInstance().getProperty(JsonKey.SUNBIRD_ENCRYPTION);
+    encryption = ConfigUtil.config.getString(JsonKey.SUNBIRD_ENCRYPTION);
     system = ActorSystem.create("system");
     Util.checkCassandraDbConnections(JsonKey.SUNBIRD);
     userManagementDB = Util.dbInfoMap.get(JsonKey.USER_DB);

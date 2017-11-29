@@ -5,11 +5,12 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerEnum;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.learner.actors.BackgroundRequestRouterActor;
 import org.sunbird.learner.actors.RequestRouterActor;
 import org.sunbird.learner.util.SchedulerManager;
@@ -32,7 +33,6 @@ public class Application {
   private static final String BKG_LOCAL_ACTOR_SYSTEM_NAME = "BackGroundLocalMiddlewareActorSystem";
   private static final String BKG_REMOTE_ACTOR_SYSTEM_NAME =
       "BackGroundRemoteMiddlewareActorSystem";
-  static PropertiesCache cache = PropertiesCache.getInstance();
 
   public static void main(String[] args) {
     /*
@@ -45,7 +45,7 @@ public class Application {
      * and if value is "BackGroundRemoteMiddlewareActorSystem" , it will start background actor
      * system on that machine
      */
-    String actorSystemToStart = System.getenv(JsonKey.ACTOR_SERVICE_INSTANCE);
+    String actorSystemToStart = ConfigUtil.config.getString(JsonKey.ACTOR_SERVICE_INSTANCE);
     /*
      * Temporary changes for running learning service and actor service only on 2 machine instead of 3 machine
      * 
@@ -58,19 +58,16 @@ public class Application {
      * if you want to run background actor remotely then change the value of actorSystemToStart to BackGroundRemoteMiddlewareActorSystem
      * OR if you want to run normal actor remotely then change the value of actorSystemToStart to RemoteMiddlewareActorSystem
      */
-    if(!ProjectUtil.isStringNullOREmpty(PropertiesCache.getInstance().getProperty(JsonKey.ACTOR_SERVICE_INSTANCE))){
-      actorSystemToStart = PropertiesCache.getInstance().getProperty(JsonKey.ACTOR_SERVICE_INSTANCE);
-    }
-    if ("remote".equalsIgnoreCase(cache.getProperty("api_actor_provider"))
+    if (JsonKey.REMOTE.equalsIgnoreCase(ConfigUtil.config.getString(JsonKey.API_ACTOR_PROVIDER))
         && (REMOTE_ACTOR_SYSTEM_NAME.equalsIgnoreCase(actorSystemToStart))) {
       ProjectLogger.log("Initializing Normal Actor System remotely");
       startRemoteActorSystem();
     }
-    if ("remote".equalsIgnoreCase(cache.getProperty("background_actor_provider"))
+    if (JsonKey.REMOTE.equalsIgnoreCase(ConfigUtil.config.getString(JsonKey.BACKGROUND_ACTOR_PROVIDER))
         && (BKG_REMOTE_ACTOR_SYSTEM_NAME.equalsIgnoreCase(actorSystemToStart))) {
       ProjectLogger.log("Initializing Background Actor System remotely ");
       startBackgroundRemoteActorSystem();
-    } else if("local".equalsIgnoreCase(cache.getProperty("background_actor_provider"))){
+    } else if(JsonKey.LOCAL.equalsIgnoreCase(ConfigUtil.config.getString(JsonKey.BACKGROUND_ACTOR_PROVIDER))){
       ProjectLogger.log("Initializing Background Actor System locally ");
       startBackgroundLocalActorSystem();
     }
@@ -83,16 +80,14 @@ public class Application {
   private static void startRemoteActorSystem() {
     ProjectLogger.log("startRemoteCreationSystem method called....");
     Config con = null;
-    String host = System.getenv(JsonKey.SUNBIRD_ACTOR_SERVICE_IP);
-    String port = System.getenv(JsonKey.SUNBIRD_ACTOR_SERVICE_PORT);
+    String host = ConfigUtil.config.getString(JsonKey.SUNBIRD_ACTOR_SERVICE_IP);
+    String port = ConfigUtil.config.getString(JsonKey.SUNBIRD_ACTOR_SERVICE_PORT);
 
     if (!ProjectUtil.isStringNullOREmpty(host) && !ProjectUtil.isStringNullOREmpty(port)) {
       con = ConfigFactory
           .parseString(
               "akka.remote.netty.tcp.hostname=" + host + ",akka.remote.netty.tcp.port=" + port + "")
-          .withFallback(ConfigFactory.load().getConfig(ACTOR_CONFIG_NAME));
-    } else {
-      con = ConfigFactory.load().getConfig(ACTOR_CONFIG_NAME);
+          .withFallback(ConfigUtil.config.getConfig(ACTOR_CONFIG_NAME));
     }
     system = ActorSystem.create(REMOTE_ACTOR_SYSTEM_NAME, con);
     ActorRef learnerActorSelectorRef = system.actorOf(Props.create(RequestRouterActor.class),
@@ -115,15 +110,14 @@ public class Application {
 
   public static ActorRef startLocalActorSystem() {
     system = ActorSystem.create(LOCAL_ACTOR_SYSTEM_NAME,
-        ConfigFactory.load().getConfig(ACTOR_LOCAL_CONFIG_NAME));
+        ConfigUtil.config.getConfig(ACTOR_LOCAL_CONFIG_NAME));
     ActorRef learnerActorSelectorRef = system.actorOf(Props.create(RequestRouterActor.class),
         RequestRouterActor.class.getSimpleName());
     ProjectLogger.log("normal local ActorSelectorRef " + learnerActorSelectorRef);
     ProjectLogger.log("NORNAL ACTOR LOCAL SYSTEM STARTED " + learnerActorSelectorRef,
         LoggerEnum.INFO.name());
     checkCassandraConnection();
-    PropertiesCache cache = PropertiesCache.getInstance();
-    if ("local".equalsIgnoreCase(cache.getProperty("background_actor_provider"))) {
+    if ("local".equalsIgnoreCase(ConfigUtil.config.getString(JsonKey.BACKGROUND_ACTOR_PROVIDER))) {
       ProjectLogger.log("Initializing Local Background Actor System");
       startBackgroundLocalActorSystem();
     }
@@ -135,14 +129,15 @@ public class Application {
    */
   private static void startBackgroundRemoteActorSystem() {
     Config con = null;
-    String host = System.getenv(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP);
-    String port = System.getenv(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT);
 
-    if (!ProjectUtil.isStringNullOREmpty(host) && !ProjectUtil.isStringNullOREmpty(port)) {
+    if (ConfigUtil.config.hasPath(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP)
+        && ConfigUtil.config.hasPath(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT)) {
+      String host = ConfigUtil.config.getString(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP);
+      String port = ConfigUtil.config.getString(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT);
       con = ConfigFactory
           .parseString(
               "akka.remote.netty.tcp.hostname=" + host + ",akka.remote.netty.tcp.port=" + port + "")
-          .withFallback(ConfigFactory.load().getConfig(BKG_ACTOR_CONFIG_NAME));
+          .withFallback(ConfigUtil.config.getConfig(BKG_ACTOR_CONFIG_NAME));
     } else {
       con = ConfigFactory.load().getConfig(BKG_ACTOR_CONFIG_NAME);
     }
@@ -159,7 +154,7 @@ public class Application {
 
   public static ActorRef startBackgroundLocalActorSystem() {
     ActorSystem system = ActorSystem.create(BKG_LOCAL_ACTOR_SYSTEM_NAME,
-        ConfigFactory.load().getConfig(BKG_ACTOR_LOCAL_CONFIG_NAME));
+        ConfigUtil.config.getConfig(BKG_ACTOR_LOCAL_CONFIG_NAME));
     ActorRef learnerActorSelectorRef =
         system.actorOf(Props.create(BackgroundRequestRouterActor.class),
             BackgroundRequestRouterActor.class.getSimpleName());

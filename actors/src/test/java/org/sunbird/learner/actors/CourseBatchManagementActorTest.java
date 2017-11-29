@@ -33,7 +33,6 @@ import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.request.Request;
 import org.sunbird.helper.ServiceFactory;
 import org.sunbird.learner.util.EkStepRequestUtil;
@@ -53,7 +52,6 @@ public class CourseBatchManagementActorTest {
   
   static ActorSystem system;
   static CassandraOperation operation= ServiceFactory.getInstance();
-  static PropertiesCache cach = PropertiesCache.getInstance();
   final static Props props = Props.create(CourseBatchManagementActor.class);
   static Util.DbInfo batchDbInfo = null;
   static Util.DbInfo userOrgdbInfo = null;

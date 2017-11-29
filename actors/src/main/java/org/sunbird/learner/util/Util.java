@@ -1,6 +1,5 @@
 package org.sunbird.learner.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -10,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +18,7 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.HttpUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerEnum;
@@ -26,13 +27,13 @@ import org.sunbird.common.models.util.ProjectUtil;
 import org.sunbird.common.models.util.ProjectUtil.EsIndex;
 import org.sunbird.common.models.util.ProjectUtil.EsType;
 import org.sunbird.common.models.util.ProjectUtil.OrgStatus;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.quartz.scheduler.SchedulerManager;
-import org.sunbird.common.responsecode.ResponseCode;
 import org.sunbird.dto.SearchDTO;
 import org.sunbird.helper.CassandraConnectionManager;
 import org.sunbird.helper.CassandraConnectionMngrFactory;
 import org.sunbird.helper.ServiceFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
@@ -53,7 +54,6 @@ public class Util {
     
     
     static {
-        loadPropertiesFile();
         initializeOrgStatusTransition();
         initializeDBProperty();
         initializeAuditLogUrl();
@@ -185,9 +185,7 @@ public class Util {
      */
     public static void checkCassandraDbConnections(String keySpace) {
 
-      PropertiesCache propertiesCache = PropertiesCache.getInstance();
-
-      String cassandraMode = propertiesCache.getProperty(JsonKey.SUNBIRD_CASSANDRA_MODE);
+      String cassandraMode = ConfigUtil.config.getString(JsonKey.SUNBIRD_CASSANDRA_MODE);
       if (ProjectUtil.isStringNullOREmpty(cassandraMode) || cassandraMode
           .equalsIgnoreCase(JsonKey.EMBEDDED_MODE)) {
 
@@ -206,21 +204,17 @@ public class Util {
         }
 
         } else if (cassandraMode.equalsIgnoreCase(JsonKey.STANDALONE_MODE)) {
-          if (readConfigFromEnv(keySpace)) {
-            ProjectLogger.log("db connection is created from System env variable.");
-            return;
-          }
         CassandraConnectionManager cassandraConnectionManager = CassandraConnectionMngrFactory
               .getObject(JsonKey.STANDALONE_MODE);
-          String[] ipList = prop.getProperty(JsonKey.DB_IP).split(",");
-          String[] portList = prop.getProperty(JsonKey.DB_PORT).split(",");
-          String[] keyspaceList = prop.getProperty(JsonKey.DB_KEYSPACE).split(",");
+          List<String> ipList = ConfigUtil.getStringList(JsonKey.SUNBIRD_CASSANDRA_IP);
+          List<String> portList = ConfigUtil.getStringList(JsonKey.SUNBIRD_CASSANDRA_PORT);
+          //List<String> keyspaceList = ConfigUtil.getStringList(JsonKey.DB_KEYSPACE);
 
-          String userName = prop.getProperty(JsonKey.DB_USERNAME);
-          String password = prop.getProperty(JsonKey.DB_PASSWORD);
-          for (int i = 0; i < ipList.length; i++) {
-            String ip = ipList[i];
-            String port = portList[i];
+          String userName = prop.getProperty(JsonKey.SUNBIRD_CASSANDRA_USER_NAME);
+          String password = prop.getProperty(JsonKey.SUNBIRD_CASSANDRA_PASSWORD);
+          for (int i = 0; i < ipList.size(); i++) {
+            String ip = ipList.get(i);
+            String port = portList.get(i);
             //Reading the same keyspace which is passed in the method
             //String keyspace = keyspaceList[i];
 
@@ -245,69 +239,6 @@ public class Util {
           }
         }
 
-
-    }
-    
-    /**
-     * This method will read the configuration from System variable.
-     * @return boolean
-     */
-    public static boolean readConfigFromEnv(String keyspace) {
-        boolean response = false;
-        String ips = System.getenv(JsonKey.SUNBIRD_CASSANDRA_IP);
-        String envPort = System.getenv(JsonKey.SUNBIRD_CASSANDRA_PORT);
-      CassandraConnectionManager cassandraConnectionManager = CassandraConnectionMngrFactory.getObject(JsonKey.STANDALONE_MODE);
-        
-        if (ProjectUtil.isStringNullOREmpty(ips) || ProjectUtil.isStringNullOREmpty(envPort) ) {
-            ProjectLogger.log("Configuration value is not coming form System variable.");
-            return response;
-        }
-        String[] ipList = ips.split(",");
-        String[] portList = envPort.split(",");
-        String userName = System.getenv(JsonKey.SUNBIRD_CASSANDRA_USER_NAME);
-        String password = System.getenv(JsonKey.SUNBIRD_CASSANDRA_PASSWORD);
-        for (int i = 0; i < ipList.length; i++) {
-            String ip = ipList[i];
-            String port = portList[i];
-            try {
-                boolean result = cassandraConnectionManager.createConnection(ip, port, userName, password, keyspace);
-                if (result) {
-                    ProjectLogger.log("CONNECTION CREATED SUCCESSFULLY FOR IP: " + ip + " : KEYSPACE :" + keyspace, LoggerEnum.INFO.name());
-                } else {
-                    ProjectLogger.log("CONNECTION CREATION FAILED FOR IP: " + ip + " : KEYSPACE :" + keyspace, LoggerEnum.INFO.name());
-                }
-                response = true;
-            } catch (ProjectCommonException ex) {
-                ProjectLogger.log(ex.getMessage(), ex);
-                throw new ProjectCommonException(ResponseCode.invaidConfiguration.getErrorCode(),
-                        ResponseCode.invaidConfiguration.getErrorCode(), ResponseCode.SERVER_ERROR.hashCode());
-            }
-        }
-        return response;
-    }
-    
-    /**
-     * This method will load the db config properties file.
-     */
-    private static void loadPropertiesFile() {
-
-        InputStream input = null;
-
-        try {
-            input = Util.class.getClassLoader().getResourceAsStream("dbconfig.properties");
-            // load a properties file
-            prop.load(input);
-        } catch (IOException ex) {
-            ProjectLogger.log(ex.getMessage(), ex);
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                  ProjectLogger.log(e.getMessage(), e);
-                }
-            }
-        }
 
     }
     
@@ -502,15 +433,9 @@ public class Util {
         JSONObject jObject;
         ObjectMapper mapper = new ObjectMapper();
         try {
-          String baseSearchUrl = System.getenv(JsonKey.EKSTEP_BASE_URL);
-          if(ProjectUtil.isStringNullOREmpty(baseSearchUrl)){
-            baseSearchUrl = PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_BASE_URL);
-          }
-          headers.put(JsonKey.AUTHORIZATION, System.getenv(JsonKey.AUTHORIZATION));
-          if(ProjectUtil.isStringNullOREmpty((String)headers.get(JsonKey.AUTHORIZATION))){
-            headers.put(JsonKey.AUTHORIZATION, JsonKey.BEARER+PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_AUTHORIZATION));
-          }
-            response = HttpUtil.sendPostRequest(baseSearchUrl+PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_CONTENT_SEARCH_URL),
+          String baseSearchUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
+          headers.put(JsonKey.AUTHORIZATION, JsonKey.BEARER + ConfigUtil.config.getString(JsonKey.AUTHORIZATION));
+          response = HttpUtil.sendPostRequest(baseSearchUrl + ConfigUtil.config.getString(JsonKey.EKSTEP_CONTENT_SEARCH_URL),
                     (String) section.get(JsonKey.SEARCH_QUERY), headers);
             jObject = new JSONObject(response);
             data = jObject.getJSONObject(JsonKey.RESULT);
@@ -558,6 +483,7 @@ public class Util {
         return null;
     }
     
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static String getRootOrgIdFromChannel(String channel) {
       if (!ProjectUtil.isStringNullOREmpty(channel)) {
         Map<String, Object> filters = new HashMap<>();

@@ -5,8 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.models.util.datasecurity.DecryptionService;
 import org.sunbird.common.models.util.datasecurity.EncryptionService;
 import org.sunbird.common.models.util.datasecurity.impl.ServiceFactory;
@@ -25,15 +26,13 @@ public class UserUtility {
   private static List<String> addressKeyToEncrypt = new ArrayList<>();
   private static List<String> userKeyToDecrypt = new ArrayList<>();
   static {
-    String userKey = PropertiesCache.getInstance().getProperty("userkey.encryption");
-    userKeyToEncrypt = new ArrayList<>(Arrays.asList(userKey.split(",")));
-    String addressKey = PropertiesCache.getInstance().getProperty("addresskey.encryption");
-    addressKeyToEncrypt = new ArrayList<>(Arrays.asList(addressKey.split(",")));
-    String userKeyDecrypt = PropertiesCache.getInstance().getProperty("userkey.decryption");
-    userKeyToDecrypt = new ArrayList<>(Arrays.asList(userKeyDecrypt.split(",")));
+    userKeyToEncrypt = ConfigUtil.getStringList(JsonKey.USER_ENCRYPTION);
+    addressKeyToEncrypt = ConfigUtil.getStringList(JsonKey.ADDRESS_ENCRYPTION);
+    userKeyToDecrypt = ConfigUtil.getStringList(JsonKey.USER_DECRYPTION);
   }
 
 
+  @SuppressWarnings("unchecked")
   public static Map<String, Object> encryptUserData(Map<String, Object> userMap) throws Exception {
     EncryptionService service = ServiceFactory.getEncryptionServiceInstance(null);
     // Encrypt user basic info
@@ -71,6 +70,7 @@ public class UserUtility {
     return addressList;
   }
 
+  @SuppressWarnings("unchecked")
   public static Map<String, Object> decryptUserData(Map<String, Object> userMap) {
     DecryptionService service = ServiceFactory.getDecryptionServiceInstance(null);
     // Decrypt user basic info
@@ -95,6 +95,7 @@ public class UserUtility {
     return userMap;
   }
 
+  @SuppressWarnings("unchecked")
   public static Map<String, Object> decryptUserDataFrmES(Map<String, Object> userMap) {
     DecryptionService service = ServiceFactory.getDecryptionServiceInstance(null);
     // Decrypt user basic info
@@ -133,6 +134,7 @@ public class UserUtility {
     return addressList;
   }
 
+  @SuppressWarnings("unchecked")
   public static Map<String, Object> encryptUserSearchFilterQueryData(Map<String, Object> map)
       throws Exception {
     Map<String, Object> filterMap = (Map<String, Object>) map.get(JsonKey.FILTERS);

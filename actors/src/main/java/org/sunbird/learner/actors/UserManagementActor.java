@@ -19,6 +19,7 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerEnum;
 import org.sunbird.common.models.util.ProjectLogger;
@@ -26,7 +27,6 @@ import org.sunbird.common.models.util.ProjectUtil;
 import org.sunbird.common.models.util.ProjectUtil.EsIndex;
 import org.sunbird.common.models.util.ProjectUtil.EsType;
 import org.sunbird.common.models.util.ProjectUtil.Status;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.models.util.datasecurity.DecryptionService;
 import org.sunbird.common.models.util.datasecurity.EncryptionService;
 import org.sunbird.common.models.util.datasecurity.OneWayHashing;
@@ -60,9 +60,8 @@ public class UserManagementActor extends UntypedAbstractActor {
           .getEncryptionServiceInstance(null);
   private DecryptionService decryptionService = org.sunbird.common.models.util.datasecurity.impl.ServiceFactory
       .getDecryptionServiceInstance(null);
-  private PropertiesCache propertiesCache = PropertiesCache.getInstance();
   boolean isSSOEnabled =
-      Boolean.parseBoolean(PropertiesCache.getInstance().getProperty(JsonKey.IS_SSO_ENABLED));
+      Boolean.parseBoolean(ConfigUtil.config.getString(JsonKey.IS_SSO_ENABLED));
   private Util.DbInfo userOrgDbInfo = Util.dbInfoMap.get(JsonKey.USER_ORG_DB);
   private Util.DbInfo geoLocationDbInfo = Util.dbInfoMap.get(JsonKey.GEO_LOCATION_DB);
 
@@ -260,6 +259,7 @@ public class UserManagementActor extends UntypedAbstractActor {
   }
   
   
+  @SuppressWarnings("unused")
   private void handlePublicVisibility (String userId, List<String> publicFieldList,Map<String,Object> data) {
     
   }
@@ -305,6 +305,7 @@ public class UserManagementActor extends UntypedAbstractActor {
   }
   
   
+  @SuppressWarnings({"unused", "unchecked", "rawtypes"})
   private Map<String, List<String>> addPrivateField(String key,
       Map<String, List<String>> map, String privateField) {
     if (map.containsKey(key)) {
@@ -318,7 +319,7 @@ public class UserManagementActor extends UntypedAbstractActor {
     return map;
   }
   
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "unused"})
   private void updatePrivateKey(List<String> keys, Map<String, Object> data,
       Map<String, Object> privateMap, String attribute) {
     if (keys == null || keys.isEmpty())
@@ -342,7 +343,7 @@ public class UserManagementActor extends UntypedAbstractActor {
   
   
   /**
-   * THis methods will update user private field under cassandra.
+   * This methods will update user private field under cassandra.
    * @param userId Stirng
    * @param privateFieldMap Map<String,String>
    */
@@ -380,8 +381,9 @@ public class UserManagementActor extends UntypedAbstractActor {
    * register email.
    * @param actorMessage Request
    */
+  @SuppressWarnings("unchecked")
   private void forgotPassword(Request actorMessage) {
-    Map<String, Object> map = (Map) actorMessage.getRequest().get(JsonKey.USER);
+    Map<String, Object> map = (Map<String,Object>) actorMessage.getRequest().get(JsonKey.USER);
     String userName = (String) map.get(JsonKey.USERNAME);
     boolean isEmailvalid = ProjectUtil.isEmailvalid(userName);
     String searchedKey = "";
@@ -436,7 +438,7 @@ public class UserManagementActor extends UntypedAbstractActor {
     response.put(JsonKey.RESPONSE, JsonKey.SUCCESS);
     sender().tell(response, self());
     if (Boolean.parseBoolean(
-        PropertiesCache.getInstance().getProperty(JsonKey.IS_SSO_ENABLED))) {
+      ConfigUtil.config.getString(JsonKey.IS_SSO_ENABLED))) {
       SSOManager ssoManager = SSOServiceFactory.getInstance();
       boolean addedResponse = ssoManager.addUserLoginTime(userId);
       ProjectLogger.log("user login time added response is ==" + addedResponse);
@@ -519,7 +521,7 @@ public class UserManagementActor extends UntypedAbstractActor {
           result.remove(JsonKey.ENC_EMAIL);
           result.remove(JsonKey.ENC_PHONE);
           if (null != actorMessage.getRequest().get(JsonKey.FIELDS)) {
-            List<String> requestFields = (List) actorMessage.getRequest().get(JsonKey.FIELDS);
+            List<String> requestFields = (List<String>) actorMessage.getRequest().get(JsonKey.FIELDS);
             if (requestFields != null) {
               if (!requestFields.contains(JsonKey.COMPLETENESS)) {
                 result.remove(JsonKey.COMPLETENESS);
@@ -680,6 +682,7 @@ public class UserManagementActor extends UntypedAbstractActor {
   }
 
 
+  @SuppressWarnings("unchecked")
   private void fetchTopicOfAssociatedOrgs(Map<String, Object> result) {
 
     String userId = (String) result.get(JsonKey.ID);
@@ -756,7 +759,7 @@ public class UserManagementActor extends UntypedAbstractActor {
    *
    * @return List<Map<String,Object>>
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "unused"})
   private List<Map<String, Object>> getOrganisationDetailsByUserId(String userId) {
     List<Map<String, Object>> organisations = new ArrayList<>();
 
@@ -1652,6 +1655,7 @@ public class UserManagementActor extends UntypedAbstractActor {
 
   }
 
+  @SuppressWarnings("unchecked")
   private void checkPhoneUniqueness(Map<String,Object> userMap,String opType) {
     String phone  = (String) userMap.get(JsonKey.PHONE);
     if(!ProjectUtil.isStringNullOREmpty(phone)){
@@ -2652,6 +2656,7 @@ public class UserManagementActor extends UntypedAbstractActor {
 
   }
 
+  @SuppressWarnings("unchecked")
   private List<Map<String, Object>> checkDataUserExtTable(Map<String, Object> map) {
     Util.DbInfo usrExtIdDb = Util.dbInfoMap.get(JsonKey.USR_EXT_ID_DB);
     Map<String, Object> reqMap = new HashMap<>();
@@ -2685,28 +2690,26 @@ public class UserManagementActor extends UntypedAbstractActor {
       List<String> reciptientsMail = new ArrayList<>();
       reciptientsMail.add((String) emailTemplateMap.get(JsonKey.EMAIL));
       emailTemplateMap.put(JsonKey.RECIPIENT_EMAILS, reciptientsMail);
-      if (!ProjectUtil.isStringNullOREmpty(System.getenv("sunird_web_url"))
-          || !ProjectUtil.isStringNullOREmpty(propertiesCache.getProperty("sunird_web_url"))) {
+      if (ConfigUtil.config.hasPath(JsonKey.SUNBIRD_WEB_URL)) {
         emailTemplateMap.put(JsonKey.WEB_URL,
-            ProjectUtil.isStringNullOREmpty(System.getenv("sunird_web_url"))
-                ? propertiesCache.getProperty("sunird_web_url") : System.getenv("sunird_web_url"));
+            ConfigUtil.config.getString(JsonKey.SUNBIRD_WEB_URL));
       }
-      String appUrl = System.getenv("sunbird_app_url");
-      if (ProjectUtil.isStringNullOREmpty(appUrl)) {
-        appUrl = propertiesCache.getProperty("sunbird_app_url");
+      String appUrl = null;
+      if (ConfigUtil.config.hasPath(JsonKey.SUNBIRD_APP_URL)) {
+        appUrl = ConfigUtil.config.getString(JsonKey.SUNBIRD_APP_URL);
       }
 
-      if ((!ProjectUtil.isStringNullOREmpty(appUrl)) && (!"sunbird_app_url".equalsIgnoreCase(appUrl))) {
+      if ((!ProjectUtil.isStringNullOREmpty(appUrl)) && (!JsonKey.SUNBIRD_APP_URL.equalsIgnoreCase(appUrl))) {
           emailTemplateMap.put(JsonKey.APP_URL, appUrl);
       }
 
       emailTemplateMap.put(JsonKey.BODY,
-          propertiesCache.getProperty(JsonKey.ONBOARDING_WELCOME_MAIL_BODY));
-      emailTemplateMap.put(JsonKey.NOTE, propertiesCache.getProperty(JsonKey.MAIL_NOTE));
-      emailTemplateMap.put(JsonKey.ORG_NAME, propertiesCache.getProperty(JsonKey.ORG_NAME));
-      String welcomeMessage = propertiesCache.getProperty("onboarding_welcome_message");
+          ConfigUtil.config.getString(JsonKey.ONBOARDING_WELCOME_MAIL_BODY));
+      emailTemplateMap.put(JsonKey.NOTE, ConfigUtil.config.getString(JsonKey.MAIL_NOTE));
+      emailTemplateMap.put(JsonKey.ORG_NAME, ConfigUtil.config.getString(JsonKey.ORG_NAME));
+      String welcomeMessage = ConfigUtil.config.getString(JsonKey.ONBOARDING_WELCOME_MESSAGE);
       emailTemplateMap.put(JsonKey.WELCOME_MESSAGE, ProjectUtil
-          .formatMessage(welcomeMessage, propertiesCache.getProperty(JsonKey.ORG_NAME)).trim());
+          .formatMessage(welcomeMessage, ConfigUtil.config.getString(JsonKey.ORG_NAME)).trim());
 
       emailTemplateMap.put(JsonKey.EMAIL_TEMPLATE_TYPE, "welcome");
 
@@ -2728,13 +2731,10 @@ public class UserManagementActor extends UntypedAbstractActor {
     VelocityContext context = new VelocityContext();
     context.put(JsonKey.NAME, name);
     context.put(JsonKey.TEMPORARY_PASSWORD, ProjectUtil.generateRandomPassword());
-    context.put(JsonKey.NOTE , propertiesCache.getProperty(JsonKey.MAIL_NOTE));
-    context.put(JsonKey.ORG_NAME , propertiesCache.getProperty(JsonKey.ORG_NAME));
-    String appUrl = System.getenv(JsonKey.SUNBIRD_APP_URL);
-    if (ProjectUtil.isStringNullOREmpty(appUrl)) {
-       appUrl = propertiesCache.getProperty(JsonKey.SUNBIRD_APP_URL);
-    }
-    context.put(JsonKey.WEB_URL, ProjectUtil.isStringNullOREmpty(System.getenv(JsonKey.SUNBIRD_WEB_URL)) ? propertiesCache.getProperty(JsonKey.SUNBIRD_WEB_URL) : System.getenv(JsonKey.SUNBIRD_WEB_URL));
+    context.put(JsonKey.NOTE , ConfigUtil.config.getString(JsonKey.MAIL_NOTE));
+    context.put(JsonKey.ORG_NAME , ConfigUtil.config.getString(JsonKey.ORG_NAME));
+    String appUrl = ConfigUtil.config.getString(JsonKey.SUNBIRD_APP_URL);
+    context.put(JsonKey.WEB_URL, ConfigUtil.config.getString(JsonKey.SUNBIRD_WEB_URL));
     if(!ProjectUtil.isStringNullOREmpty(appUrl)) {
        if (!JsonKey.SUNBIRD_APP_URL.equalsIgnoreCase(appUrl)) {
          context.put(JsonKey.APP_URL, appUrl);
@@ -2790,7 +2790,7 @@ public class UserManagementActor extends UntypedAbstractActor {
   private String getLastLoginTime(String userId,String time) {
     String lastLoginTime = "0";
     if (Boolean.parseBoolean(
-        PropertiesCache.getInstance().getProperty(JsonKey.IS_SSO_ENABLED))) {
+        ConfigUtil.config.getString(JsonKey.IS_SSO_ENABLED))) {
       SSOManager manager = SSOServiceFactory.getInstance();
       lastLoginTime =
           manager.getLastLoginTime(userId);

@@ -24,11 +24,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.HttpUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.responsecode.ResponseCode;
 import org.sunbird.dto.SearchDTO;
 
@@ -275,18 +275,12 @@ public abstract class BaseMetricsActor extends UntypedAbstractActor {
     Map<String, String> headers = new HashMap<>();
     String response = null;
     try {
-      String baseSearchUrl = System.getenv(JsonKey.EKSTEP_BASE_URL);
-      if (ProjectUtil.isStringNullOREmpty(baseSearchUrl)) {
-        baseSearchUrl = PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_BASE_URL);
-      }
+      String baseSearchUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
       headers.put(JsonKey.AUTHORIZATION, JsonKey.BEARER
-          + System.getenv(JsonKey.EKSTEP_AUTHORIZATION));
-      if (ProjectUtil.isStringNullOREmpty((String) headers.get(JsonKey.AUTHORIZATION))) {
-        headers.put(JsonKey.AUTHORIZATION, PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_AUTHORIZATION));
-        headers.put("Content_Type", "application/json; charset=utf-8");
-      }
+          + ConfigUtil.config.getString(JsonKey.EKSTEP_AUTHORIZATION));
+      headers.put("Content_Type", "application/json; charset=utf-8");
       response = HttpUtil.sendPostRequest(
-          baseSearchUrl + PropertiesCache.getInstance().getProperty(apiUrl), request, headers);
+          baseSearchUrl + ConfigUtil.config.getString(apiUrl), request, headers);
 
     } catch (Exception e) {
       ProjectLogger.log("Error occured", e);
@@ -301,17 +295,10 @@ public abstract class BaseMetricsActor extends UntypedAbstractActor {
     Map<String, String> headers = new HashMap<>();
     String response = null;
     try {
-      String baseSearchUrl = System.getenv(JsonKey.EKSTEP_BASE_URL);
-      if (ProjectUtil.isStringNullOREmpty(baseSearchUrl)) {
-        baseSearchUrl = PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_BASE_URL);
-      }
+      String baseSearchUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
       headers.put(JsonKey.AUTHORIZATION, JsonKey.BEARER
-          + System.getenv(JsonKey.EKSTEP_AUTHORIZATION));
-      if (ProjectUtil.isStringNullOREmpty((String) headers.get(JsonKey.AUTHORIZATION))) {
-        headers.put(JsonKey.AUTHORIZATION, 
-            PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_AUTHORIZATION));
-        headers.put("Content_Type", "application/json; charset=utf-8");
-      }
+          + ConfigUtil.config.getString(JsonKey.EKSTEP_AUTHORIZATION));
+      headers.put("Content_Type", "application/json; charset=utf-8");
       response = HttpUtil.sendGetRequest(
           baseSearchUrl + apiUrl , headers);
 
@@ -326,18 +313,11 @@ public abstract class BaseMetricsActor extends UntypedAbstractActor {
 
   public static String makePostRequest(String url, String body) throws Exception {
     ProjectLogger.log("Request to Ekstep for Metrics" + body);
-    String baseSearchUrl = System.getenv(JsonKey.EKSTEP_BASE_URL);
-    if (ProjectUtil.isStringNullOREmpty(baseSearchUrl)) {
-      baseSearchUrl = PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_BASE_URL);
-    }
-    String authKey = System.getenv(JsonKey.EKSTEP_AUTHORIZATION);
-    if (ProjectUtil.isStringNullOREmpty(authKey)) {
-      authKey = PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_AUTHORIZATION);
-    } else {
-      authKey = JsonKey.BEARER + authKey;
-    }
+    String baseSearchUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
+    String authKey = ConfigUtil.config.getString(JsonKey.EKSTEP_AUTHORIZATION);
+    authKey = JsonKey.BEARER + authKey;
     HttpClient client = HttpClientBuilder.create().build();
-    HttpPost post = new HttpPost(baseSearchUrl + PropertiesCache.getInstance().getProperty(url));
+    HttpPost post = new HttpPost(baseSearchUrl + ConfigUtil.config.getString(url));
     post.addHeader("Content-Type", "application/json; charset=utf-8");
     post.addHeader(JsonKey.AUTHORIZATION, authKey);
     post.setEntity(new StringEntity(body, Charsets_UTF_8));

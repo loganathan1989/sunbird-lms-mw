@@ -12,6 +12,7 @@ public class RemoteActorSystemTest {
 
   
   static String provider = null;
+  @SuppressWarnings("rawtypes")
   static Class t  = null;    
   @BeforeClass
   public static void setUp() {
@@ -21,7 +22,7 @@ public class RemoteActorSystemTest {
     }
   }
   
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("unchecked")
   @Test
   public void instanceCreationTest() {
     Exception exp = null ;
@@ -37,6 +38,7 @@ public class RemoteActorSystemTest {
     org.junit.Assert.assertNull(exp);
   }
   
+  @SuppressWarnings("unchecked")
   @Test
   public void remoteActorTest () {
     Exception exp = null ;

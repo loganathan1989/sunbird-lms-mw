@@ -38,6 +38,7 @@ public class DataCacheHandler implements Runnable {
     orgTypeCache(orgTypeMap);
   }
 
+  @SuppressWarnings("unchecked")
   private void orgTypeCache(Map<String, String> orgTypeMap) {
     Response response =
         cassandraOperation.getAllRecords(KEY_SPACE_NAME, JsonKey.ORG_TYPE_DB);
@@ -50,6 +51,7 @@ public class DataCacheHandler implements Runnable {
     }
   }
   
+  @SuppressWarnings("unchecked")
   private void roleCache(Map<String, Object> roleMap) {
     Response response =
         cassandraOperation.getAllRecords(KEY_SPACE_NAME, JsonKey.ROLE_GROUP);

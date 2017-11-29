@@ -15,11 +15,11 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerEnum;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.models.util.ProjectUtil.EsType;
 import org.sunbird.common.models.util.ProjectUtil.ReportTrackingStatus;
 import org.sunbird.common.request.Request;
@@ -388,7 +388,7 @@ public class OrganisationMetricsBackgroundActor extends BaseMetricsActor {
   private static Map<String, String> conceptList() {
     List<String> domains = getDomains();
     for (String domain : domains) {
-      String url = PropertiesCache.getInstance().getProperty((JsonKey.EKSTEP_CONCEPT_URL));
+      String url = ConfigUtil.config.getString(JsonKey.EKSTEP_CONCEPT_URL);
       url = StringUtils.replace(url, "{domain}", domain);
       String resposne = getDataFromEkstep(url);
       try {
@@ -410,7 +410,7 @@ public class OrganisationMetricsBackgroundActor extends BaseMetricsActor {
   
   @SuppressWarnings("unchecked")
   private static List<String> getDomains() {
-    String domainUrl = PropertiesCache.getInstance().getProperty((JsonKey.EKSTEP_DOMAIN_URL));
+    String domainUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_DOMAIN_URL);
     String resposne = getDataFromEkstep(domainUrl);
     List<String> domainList = new ArrayList<>();
     try {

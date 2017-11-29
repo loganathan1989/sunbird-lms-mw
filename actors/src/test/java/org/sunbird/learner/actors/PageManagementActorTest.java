@@ -23,7 +23,6 @@ import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
 import org.sunbird.common.models.util.JsonKey;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.request.Request;
 import org.sunbird.helper.ServiceFactory;
 import org.sunbird.learner.util.Util;
@@ -37,7 +36,6 @@ public class PageManagementActorTest {
 
     static ActorSystem system;
     static CassandraOperation operation= ServiceFactory.getInstance();
-    static PropertiesCache cach = PropertiesCache.getInstance();
     final static Props props = Props.create(PageManagementActor.class);
     static Util.DbInfo pageMgmntDbInfo = null;
     static Util.DbInfo pageSectionDbInfo = null;

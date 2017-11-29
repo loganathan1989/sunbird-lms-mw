@@ -18,12 +18,12 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.HttpUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerEnum;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.models.util.datasecurity.DataMaskingService;
 import org.sunbird.common.models.util.datasecurity.DecryptionService;
 import org.sunbird.common.models.util.datasecurity.EncryptionService;
@@ -291,6 +291,7 @@ public class BackgroundJobManager extends UntypedAbstractActor {
      */
   }
 
+  @SuppressWarnings({"unused", "unchecked"})
   private void enrollParticipants(Map<String, Object> batch) {
     Util.DbInfo courseBatchDBInfo = Util.dbInfoMap.get(JsonKey.COURSE_BATCH_DB);
     Util.DbInfo courseEnrollmentdbInfo = Util.dbInfoMap.get(JsonKey.LEARNER_COURSE_DB);
@@ -688,19 +689,15 @@ public class BackgroundJobManager extends UntypedAbstractActor {
   /**
    * Method to get the course data.
    *
-   * @param contnetId String
+   * @param contentId String
    * @return String
    */
-  private String getCourseData(String contnetId) {
+  private String getCourseData(String contentId) {
     String responseData = null;
     try {
-      String ekStepBaseUrl = System.getenv(JsonKey.EKSTEP_BASE_URL);
-      if (ProjectUtil.isStringNullOREmpty(ekStepBaseUrl)) {
-        ekStepBaseUrl = PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_BASE_URL);
-      }
-
+      String ekStepBaseUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
       responseData = HttpUtil.sendGetRequest(ekStepBaseUrl
-          + PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_CONTENT_URL) + contnetId,
+          + ConfigUtil.config.getString(JsonKey.EKSTEP_CONTENT_URL) + contentId,
           headerMap);
     } catch (IOException e) {
       ProjectLogger.log(e.getMessage(), e);
@@ -807,8 +804,8 @@ public class BackgroundJobManager extends UntypedAbstractActor {
     try {
       ProjectLogger.log("start call for registering the tag ==" + tagId);
       tagStatus = HttpUtil.sendPostRequest(
-          PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_BASE_URL)
-              + PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_TAG_API_URL) + "/" + tagId,
+          ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL)
+              + ConfigUtil.config.getString(JsonKey.EKSTEP_TAG_API_URL) + "/" + tagId,
           body, header);
       ProjectLogger
           .log("end call for tag registration id and status  ==" + tagId + " " + tagStatus);

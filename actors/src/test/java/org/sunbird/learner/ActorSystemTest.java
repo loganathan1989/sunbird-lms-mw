@@ -7,7 +7,8 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.sunbird.common.models.util.ActorOperations;
-import org.sunbird.common.models.util.PropertiesCache;
+import org.sunbird.common.models.util.ConfigUtil;
+import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.learner.util.actorutility.ActorSystemFactory;
 import org.sunbird.learner.util.actorutility.impl.LocalActorSystem;
 import org.sunbird.learner.util.actorutility.impl.RemoteActorSystem;
@@ -19,7 +20,7 @@ public class ActorSystemTest {
   @BeforeClass
   public static void setUp() {
     Application.startLocalActorSystem();
-    provider = PropertiesCache.getInstance().getProperty("background_actor_provider");
+    provider = ConfigUtil.config.getString(JsonKey.BACKGROUND_ACTOR_PROVIDER);
   }
   
   @SuppressWarnings("deprecation")

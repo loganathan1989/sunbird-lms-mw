@@ -23,6 +23,7 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
@@ -30,7 +31,6 @@ import org.sunbird.common.models.util.ProjectUtil.BulkProcessStatus;
 import org.sunbird.common.models.util.ProjectUtil.EsIndex;
 import org.sunbird.common.models.util.ProjectUtil.EsType;
 import org.sunbird.common.models.util.ProjectUtil.Status;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.models.util.Slug;
 import org.sunbird.common.models.util.datasecurity.EncryptionService;
 import org.sunbird.common.models.util.datasecurity.OneWayHashing;
@@ -60,7 +60,6 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
   private EncryptionService encryptionService =
       org.sunbird.common.models.util.datasecurity.impl.ServiceFactory
           .getEncryptionServiceInstance(null);
-  private PropertiesCache propertiesCache = PropertiesCache.getInstance();
   private List<String> locnIdList = new ArrayList<>();
   private CassandraOperation cassandraOperation = ServiceFactory.getInstance();
   private SSOManager ssoManager = SSOServiceFactory.getInstance();
@@ -246,6 +245,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private Boolean addUserCourses(String batchId, String courseId, String updatedBy, String userId,
       Map<String, String> additionalCourseInfo) {
 
@@ -313,7 +313,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private String validateBatchInfo(Response courseBatchResult) {
     // check batch exist in db or not
     List<Map<String, Object>> courseList =
@@ -378,7 +378,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
 
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private void processOrg(Map<String, Object> map, Map<String, Object> dataMap,
       List<Map<String, Object>> successList, List<Map<String, Object>> failureList,
       Map<String, String> channelToRootOrgCache) {
@@ -433,7 +433,6 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
 
       contactDetails = (String) concurrentHashMap.get(JsonKey.CONTACT_DETAILS);
       contactDetails = contactDetails.replaceAll("'", "\"");
-      JSONParser parser = new JSONParser();
       try {
         ObjectMapper mapper = new ObjectMapper();
         orgContactList = mapper.readValue(contactDetails, Object[].class);
@@ -756,6 +755,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
 
   }
 
+  @SuppressWarnings("unchecked")
   private String validateLocationId(String locId) {
     String locnId = null;
     try {
@@ -781,6 +781,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     return locnId;
   }
 
+  @SuppressWarnings("unchecked")
   private String validateOrgType(String orgType) {
     String orgTypeId = null;
     try {
@@ -1459,6 +1460,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
     return first.equalsIgnoreCase(second);
   }
 
+  @SuppressWarnings("unchecked")
   private void saveAuditLog(Response result, String operation, Request message) {
     AuditOperation auditOperation = (AuditOperation) Util.auditLogUrlMap.get(operation);
     if (auditOperation.getObjectType().equalsIgnoreCase(JsonKey.USER)) {
@@ -1491,26 +1493,22 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       List<String> reciptientsMail = new ArrayList<>();
       reciptientsMail.add((String) emailTemplateMap.get(JsonKey.EMAIL));
       emailTemplateMap.put(JsonKey.RECIPIENT_EMAILS, reciptientsMail);
-      if (!ProjectUtil.isStringNullOREmpty(System.getenv("sunird_web_url"))
-          || !ProjectUtil.isStringNullOREmpty(propertiesCache.getProperty("sunird_web_url"))) {
+      if (ConfigUtil.config.hasPath(JsonKey.SUNBIRD_WEB_URL)) {
         emailTemplateMap.put(JsonKey.WEB_URL,
-            ProjectUtil.isStringNullOREmpty(System.getenv("sunird_web_url"))
-                ? propertiesCache.getProperty("sunird_web_url") : System.getenv("sunird_web_url"));
+            ConfigUtil.config.getString(JsonKey.SUNBIRD_WEB_URL));
       }
-      if (!ProjectUtil.isStringNullOREmpty(System.getenv("sunbird_app_url"))
-          || !ProjectUtil.isStringNullOREmpty(propertiesCache.getProperty("sunbird_app_url"))) {
+      if (ConfigUtil.config.hasPath(JsonKey.SUNBIRD_APP_URL)) {
         emailTemplateMap.put(JsonKey.APP_URL,
-            ProjectUtil.isStringNullOREmpty(System.getenv("sunbird_app_url"))
-                ? propertiesCache.getProperty("sunbird_app_url") : System.getenv("sunird_web_url"));
+            ConfigUtil.config.getString(JsonKey.SUNBIRD_APP_URL));
       }
 
       emailTemplateMap.put(JsonKey.BODY,
-          propertiesCache.getProperty(JsonKey.ONBOARDING_WELCOME_MAIL_BODY));
-      emailTemplateMap.put(JsonKey.NOTE, propertiesCache.getProperty(JsonKey.MAIL_NOTE));
-      emailTemplateMap.put(JsonKey.ORG_NAME, propertiesCache.getProperty(JsonKey.ORG_NAME));
-      String welcomeMessage = propertiesCache.getProperty("onboarding_welcome_message");
+          ConfigUtil.config.getString(JsonKey.ONBOARDING_WELCOME_MAIL_BODY));
+      emailTemplateMap.put(JsonKey.NOTE, ConfigUtil.config.getString(JsonKey.MAIL_NOTE));
+      emailTemplateMap.put(JsonKey.ORG_NAME, ConfigUtil.config.getString(JsonKey.ORG_NAME));
+      String welcomeMessage = ConfigUtil.config.getString(JsonKey.ONBOARDING_WELCOME_MESSAGE);
       emailTemplateMap.put(JsonKey.WELCOME_MESSAGE, ProjectUtil
-          .formatMessage(welcomeMessage, propertiesCache.getProperty(JsonKey.ORG_NAME)).trim());
+          .formatMessage(welcomeMessage, ConfigUtil.config.getString(JsonKey.ORG_NAME)).trim());
 
       emailTemplateMap.put(JsonKey.EMAIL_TEMPLATE_TYPE, "welcome");
 

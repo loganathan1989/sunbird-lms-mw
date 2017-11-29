@@ -10,7 +10,6 @@ import akka.pattern.Patterns;
 import akka.routing.FromConfig;
 import akka.util.Timeout;
 import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,11 +17,11 @@ import java.util.concurrent.TimeUnit;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.LoggerEnum;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.responsecode.ResponseCode;
 import org.sunbird.learner.actors.assessment.AssessmentItemActor;
@@ -36,7 +35,7 @@ import org.sunbird.learner.actors.notificationservice.EmailServiceActor;
 import org.sunbird.learner.actors.recommend.RecommendorActor;
 import org.sunbird.learner.actors.search.CourseSearchActor;
 import org.sunbird.learner.actors.search.SearchHandlerActor;
-import org.sunbird.learner.actors.skill.SkillmanagementActor;
+import org.sunbird.learner.actors.skill.SkillManagementActor;
 import org.sunbird.learner.actors.syncjobmanager.EsSyncActor;
 import org.sunbird.learner.actors.tenantpreference.TenantPreferenceManagementActor;
 import org.sunbird.learner.audit.impl.ActorAuditLogServiceImpl;
@@ -215,7 +214,7 @@ public class RequestRouterActor extends UntypedAbstractActor {
         FromConfig.getInstance().props(Props.create(ActorAuditLogServiceImpl.class)),
         AUDIT_LOG_MGMT_ACTOR);
     skillManagementActor = getContext().actorOf(
-        FromConfig.getInstance().props(Props.create(SkillmanagementActor.class)),
+        FromConfig.getInstance().props(Props.create(SkillManagementActor.class)),
         SKILL_MANAGEMENT_ACTOR);
     tenantPrefManagementActor = getContext().actorOf(
         FromConfig.getInstance().props(Props.create(TenantPreferenceManagementActor.class)),
@@ -448,35 +447,25 @@ public class RequestRouterActor extends UntypedAbstractActor {
   }
 
   public static void createConnectionForBackgroundActors() {
-    String path = PropertiesCache.getInstance().getProperty("background.remote.actor.path");
+    String path = ConfigUtil.config.getString(JsonKey.BACKGROUND_REMOTE_ACTOR_PATH);
     ActorSystem system = null;
-    String bkghost = System.getenv(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP);
-    String bkgport = System.getenv(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT);
     Config con = null;
-    String host = System.getenv(JsonKey.SUNBIRD_ACTOR_SERVICE_IP);
-    String port = System.getenv(JsonKey.SUNBIRD_ACTOR_SERVICE_PORT);
     if ("local"
-        .equalsIgnoreCase(PropertiesCache.getInstance().getProperty("api_actor_provider"))) {
-      /*if (!ProjectUtil.isStringNullOREmpty(host) && !ProjectUtil.isStringNullOREmpty(port)) {
-        con = ConfigFactory
-            .parseString(
-                "akka.remote.netty.tcp.hostname=" + host + ",akka.remote.netty.tcp.port=" + port + "")
-            .withFallback(ConfigFactory.load().getConfig(ACTOR_CONFIG_NAME));
-      } else {*/
-        con = ConfigFactory.load().getConfig(ACTOR_CONFIG_NAME);
-      //}
+        .equalsIgnoreCase(ConfigUtil.config.getString(JsonKey.API_ACTOR_PROVIDER))) {
+        con = ConfigUtil.config.getConfig(ACTOR_CONFIG_NAME);
 
       system = akka.actor.ActorSystem.create(REMOTE_ACTOR_SYSTEM_NAME, con);
     }else{
       system = RequestRouterActor.getSystem();
     }
     try {
-      if (!ProjectUtil.isStringNullOREmpty(bkghost) && !ProjectUtil.isStringNullOREmpty(bkgport)) {
+      if (ConfigUtil.config.hasPath(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP) && ConfigUtil.config.hasPath(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT)) {
+        String bkghost = ConfigUtil.config.getString(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP);
+        String bkgport = ConfigUtil.config.getString(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT);
         ProjectLogger.log("value is taking from system env");
         path = MessageFormat.format(
-            PropertiesCache.getInstance().getProperty("background.remote.actor.env.path"),
-            System.getenv(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP),
-            System.getenv(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT));
+            ConfigUtil.config.getString(JsonKey.BACKGROUND_REMOTE_ACTOR_ENV_PATH),
+           bkghost,bkgport);
       }
       ProjectLogger.log("Actor path is ==" + path, LoggerEnum.INFO.name());
     } catch (Exception e) {

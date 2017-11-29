@@ -54,6 +54,7 @@ public class FileUploadServiceActor extends UntypedAbstractActor {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void processFileUpload(Request actorMessage) throws IOException {
     String processId = ProjectUtil.getUniqueIdFromTimestamp(1);
     Map<String, Object> req = (Map<String, Object>) actorMessage.getRequest().get(JsonKey.DATA);

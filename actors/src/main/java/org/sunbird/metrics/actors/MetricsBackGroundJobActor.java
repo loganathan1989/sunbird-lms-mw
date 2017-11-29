@@ -251,7 +251,7 @@ public class MetricsBackGroundJobActor extends UntypedAbstractActor {
 
     return SendMail.sendMail(new String[] {(String) reportDbInfo.get(JsonKey.EMAIL)},
         reportDbInfo.get(JsonKey.TYPE) + " for " + reportDbInfo.get(JsonKey.RESOURCE_ID), context,
-        ProjectUtil.getTemplate(new HashMap()));
+        ProjectUtil.getTemplate(new HashMap<String, Object>()));
   }
 
   private String processFileUpload(File file, String container) throws IOException {

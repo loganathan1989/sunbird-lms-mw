@@ -15,12 +15,12 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
 import org.sunbird.common.models.util.ProjectUtil.EsIndex;
 import org.sunbird.common.models.util.ProjectUtil.EsType;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.responsecode.ResponseCode;
 import org.sunbird.dto.SearchDTO;
@@ -30,8 +30,6 @@ import org.sunbird.learner.util.UserUtility;
 import akka.actor.UntypedAbstractActor;
 
 public class ActorAuditLogServiceImpl extends UntypedAbstractActor implements AuditLogService {
-  
-  private PropertiesCache cache = PropertiesCache.getInstance();
 
   @Override
   public void onReceive(Object message) throws Throwable {
@@ -156,7 +154,7 @@ public class ActorAuditLogServiceImpl extends UntypedAbstractActor implements Au
   private Map<String, Object> processData(Map<String, Object> requestBody, String objectProperty) {
     Map<String, Object> relationsMap = new HashMap<>();
     Map<String, Object> logRecords = new HashMap<>();
-    String userRelations = PropertiesCache.getInstance().getProperty(objectProperty);
+    String userRelations = ConfigUtil.config.getString(objectProperty);
     String[] relations = userRelations.split(",");
     for (String relation : relations) {
       if (requestBody.containsKey(relation)) {
@@ -194,7 +192,7 @@ public class ActorAuditLogServiceImpl extends UntypedAbstractActor implements Au
     Calendar cal = Calendar.getInstance();
     if(ProjectUtil.isStringNullOREmpty(fromDate) && ProjectUtil.isStringNullOREmpty(toDate)){
       toDate = dateFormat2.format(new Date());
-      cal.add(Calendar.DATE, -(Integer.parseInt(cache.getProperty("default_date_range"))));
+      cal.add(Calendar.DATE, -(ConfigUtil.config.getInt(JsonKey.DEFAULT_DATE_RANGE)));
       Date toDate1 = cal.getTime();    
       fromDate = dateFormat2.format(toDate1);
       map = new HashMap<>();
@@ -230,7 +228,7 @@ public class ActorAuditLogServiceImpl extends UntypedAbstractActor implements Au
         filters.put(JsonKey.DATE,map);
       }
     }else if(!ProjectUtil.isStringNullOREmpty(fromDate) && ProjectUtil.isStringNullOREmpty(toDate)){
-      cal.add(Calendar.DATE, Integer.parseInt(cache.getProperty("default_date_range")));
+      cal.add(Calendar.DATE, ConfigUtil.config.getInt(JsonKey.DEFAULT_DATE_RANGE));
       Date todate = cal.getTime(); 
       
       map = new HashMap<>();

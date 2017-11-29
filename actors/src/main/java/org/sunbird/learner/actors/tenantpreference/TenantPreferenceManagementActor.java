@@ -77,6 +77,7 @@ public class TenantPreferenceManagementActor extends UntypedAbstractActor {
    * Method to get the all Tenal preference of the  given root org id .
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void getTenantPreference(Request actorMessage) {
 
     ProjectLogger.log("TenantPreferenceManagementActor-createTenantPreference called");
@@ -111,6 +112,7 @@ public class TenantPreferenceManagementActor extends UntypedAbstractActor {
    * Method to update the Tenant preference on basis of id or (role and org id).
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void updateTenantPreference(Request actorMessage) {
 
     ProjectLogger.log("TenantPreferenceManagementActor-createTenantPreference called");
@@ -188,6 +190,7 @@ public class TenantPreferenceManagementActor extends UntypedAbstractActor {
    * Method to create tenant preference on basis of role and org , if already exist it will not create new one .
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void createTenantPreference(Request actorMessage) {
 
     ProjectLogger.log("TenantPreferenceManagementActor-createTenantPreference called");
@@ -263,9 +266,10 @@ public class TenantPreferenceManagementActor extends UntypedAbstractActor {
   }
 
   /**
-   * Methos to update the Terms and condition status of user , the status may be ACCEPTED or REJECTED .
+   * Method to update the Terms and condition status of user , the status may be ACCEPTED or REJECTED .
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void updateTcStatusOfUser(Request actorMessage) {
 
     ProjectLogger.log("TenantPreferenceManagementActor-updateTcStatusOfUser called");

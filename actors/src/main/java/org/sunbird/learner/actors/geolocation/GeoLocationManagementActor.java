@@ -79,6 +79,7 @@ public class GeoLocationManagementActor extends UntypedAbstractActor {
   }
 
 
+  @SuppressWarnings("unchecked")
   private void sendNotification(Request actorMessage) {
     ProjectLogger.log("sendnotification actor method called.");
       String topic = (String)actorMessage.getRequest().get(JsonKey.TO);
@@ -92,7 +93,7 @@ public class GeoLocationManagementActor extends UntypedAbstractActor {
            ResponseCode.invalidTopic.getErrorMessage(),
            ResponseCode.CLIENT_ERROR.getResponseCode());
      }
-     Map<String,Object> NotificationData = (Map) actorMessage.getRequest().get(JsonKey.DATA);
+     Map<String,Object> NotificationData = (Map<String,Object>) actorMessage.getRequest().get(JsonKey.DATA);
     String message = Notification.sendNotification(topic, NotificationData, Notification.FCM_URL);
     ProjectLogger.log("FCM message from Google ==" + message);
     response = new Response();
@@ -132,6 +133,7 @@ public class GeoLocationManagementActor extends UntypedAbstractActor {
    * Update geo location on basis of locationId , only location type and
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void updateGeoLocation(Request actorMessage) {
 
     ProjectLogger.log("GeoLocationManagementActor-updateGeoLocation called");
@@ -181,6 +183,7 @@ public class GeoLocationManagementActor extends UntypedAbstractActor {
    * Get geo location on basis of type and id . type should be organisation or location .
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void getGeoLocation(Request actorMessage) {
 
     ProjectLogger.log("GeoLocationManagementActor-getGeoLocation called");
@@ -222,6 +225,7 @@ public class GeoLocationManagementActor extends UntypedAbstractActor {
    * Create geo location , and id and topic value will be same .
    * @param actorMessage
    */
+  @SuppressWarnings("unchecked")
   private void createGeoLocation(Request actorMessage) {
 
     ProjectLogger.log("GeoLocationManagementActor-createGeoLocation called");
@@ -278,7 +282,7 @@ public class GeoLocationManagementActor extends UntypedAbstractActor {
 
       cassandraOperation.insertRecord(geoLocationDbInfo.getKeySpace() , geoLocationDbInfo.getTableName() , dbMap);
 
-      Map<String , Object> responseMap = new HashMap();
+      Map<String , Object> responseMap = new HashMap<String, Object>();
       responseMap.put(JsonKey.ID , id);
       responseMap.put(JsonKey.LOCATION , location);
       responseMap.put(JsonKey.STATUS , JsonKey.SUCCESS);

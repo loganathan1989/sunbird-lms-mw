@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import akka.actor.ActorRef;
-import akka.testkit.javadsl.TestKit;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.sunbird.common.exception.ProjectCommonException;
@@ -19,9 +16,11 @@ import org.sunbird.common.request.Request;
 import org.sunbird.learner.actors.assessment.AssessmentItemActor;
 import org.sunbird.learner.util.Util;
 
+import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.testkit.TestActorRef;
+import akka.testkit.javadsl.TestKit;
 
 public class AssessmentItemActorTest {
 

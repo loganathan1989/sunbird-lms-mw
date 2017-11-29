@@ -27,7 +27,7 @@ import org.sunbird.common.models.util.ProjectUtil.EsType;
 import org.sunbird.common.request.Request;
 import org.sunbird.helper.ServiceFactory;
 import org.sunbird.learner.actors.LearnerStateActor;
-import org.sunbird.learner.actors.skill.SkillmanagementActor;
+import org.sunbird.learner.actors.skill.SkillManagementActor;
 import org.sunbird.learner.util.Util;
 
 /**

@@ -13,11 +13,11 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.HttpUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.request.Request;
 import org.sunbird.common.responsecode.ResponseCode;
 import org.sunbird.helper.ServiceFactory;
@@ -186,15 +186,10 @@ public class BadgesActor extends UntypedAbstractActor {
     try {
       String body = "{\"request\":{\"filters\":{\"identifier\":\"test\"}}}";
       Map<String, String> headers = new HashMap<>();
-      headers.put(JsonKey.AUTHORIZATION, System.getenv(JsonKey.AUTHORIZATION));
-      if (ProjectUtil.isStringNullOREmpty((String) headers.get(JsonKey.AUTHORIZATION))) {
-        headers.put(JsonKey.AUTHORIZATION,
-            PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_AUTHORIZATION));
-        headers.put("Content_Type", "application/json; charset=utf-8");
-      }
+      headers.put(JsonKey.AUTHORIZATION, ConfigUtil.config.getString(JsonKey.AUTHORIZATION));
       String response = HttpUtil.sendPostRequest(
-          PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_BASE_URL)
-              + PropertiesCache.getInstance().getProperty(JsonKey.EKSTEP_CONTENT_SEARCH_URL),
+          ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL)
+              + ConfigUtil.config.getString(JsonKey.EKSTEP_CONTENT_SEARCH_URL),
           body, headers);
       if (response.contains("OK")) {
         responseList.add(ProjectUtil.createCheckResponse(JsonKey.EKSTEP_SERVICE, false, null));
@@ -287,7 +282,6 @@ public class BadgesActor extends UntypedAbstractActor {
   }
 
 
-  @SuppressWarnings("unchecked")
   private void getBadges(Request actorMessage) {
     try {
       Response response =

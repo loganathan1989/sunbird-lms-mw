@@ -70,6 +70,7 @@ public class EmailServiceActor extends UntypedAbstractActor {
     }
   }
 
+  @SuppressWarnings({"unchecked", "rawtypes"})
   private void sendMail(Request actorMessage) {
     Util.DbInfo usrDbInfo = Util.dbInfoMap.get(JsonKey.USER_DB);
     String name = "";

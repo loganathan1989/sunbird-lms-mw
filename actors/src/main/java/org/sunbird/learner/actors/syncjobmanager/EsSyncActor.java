@@ -14,10 +14,10 @@ import org.sunbird.common.ElasticSearchUtil;
 import org.sunbird.common.exception.ProjectCommonException;
 import org.sunbird.common.models.response.Response;
 import org.sunbird.common.models.util.ActorOperations;
+import org.sunbird.common.models.util.ConfigUtil;
 import org.sunbird.common.models.util.JsonKey;
 import org.sunbird.common.models.util.ProjectLogger;
 import org.sunbird.common.models.util.ProjectUtil;
-import org.sunbird.common.models.util.PropertiesCache;
 import org.sunbird.common.models.util.datasecurity.DataMaskingService;
 import org.sunbird.common.models.util.datasecurity.DecryptionService;
 import org.sunbird.common.models.util.datasecurity.EncryptionService;
@@ -86,6 +86,7 @@ public class EsSyncActor extends UntypedAbstractActor {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void syncData(Request message) {
     ProjectLogger.log("DB data sync operation to elastic search started ");
     long startTime = System.currentTimeMillis();
@@ -165,6 +166,7 @@ public class EsSyncActor extends UntypedAbstractActor {
     return type;
   }
 
+  @SuppressWarnings("unchecked")
   private Map<String, Object> getOrgDetails(Entry<String, Object> entry) {
     ProjectLogger.log("fetching org data started");
     Map<String, Object> orgMap = (Map<String, Object>) entry.getValue();
@@ -186,7 +188,7 @@ public class EsSyncActor extends UntypedAbstractActor {
     Util.removeAttributes(userMap, Arrays.asList(JsonKey.PASSWORD, JsonKey.UPDATED_BY));
 
     ProjectLogger.log("fetching user address data started");
-    String encryption = PropertiesCache.getInstance().getProperty(JsonKey.SUNBIRD_ENCRYPTION);
+    String encryption = ConfigUtil.config.getString(JsonKey.SUNBIRD_ENCRYPTION);
     String uid = userId;
     if ("ON".equalsIgnoreCase(encryption)) {
       try {
@@ -273,6 +275,7 @@ public class EsSyncActor extends UntypedAbstractActor {
 
 
 
+  @SuppressWarnings("unchecked")
   private Map<String, Object> getDetailsById(DbInfo dbInfo, String userId) {
     try {
       Response response =
@@ -285,6 +288,7 @@ public class EsSyncActor extends UntypedAbstractActor {
     return null;
   }
 
+  @SuppressWarnings("unchecked")
   private List<Map<String, Object>> getDetails(DbInfo dbInfo, String id, String property) {
     try {
       Response response = cassandraOperation.getRecordsByProperty(dbInfo.getKeySpace(),

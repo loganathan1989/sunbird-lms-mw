@@ -34,6 +34,7 @@ import org.sunbird.learner.util.Util;
 public class UploadLookUpScheduler implements Job {
   private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSSZ");
 
+  @SuppressWarnings("unchecked")
   public void execute(JobExecutionContext ctx) throws JobExecutionException {
     ProjectLogger.log("Running Upload Scheduler Job at: " + Calendar.getInstance().getTime()
         + " triggered by: " + ctx.getJobDetail().toString(), LoggerEnum.INFO.name());

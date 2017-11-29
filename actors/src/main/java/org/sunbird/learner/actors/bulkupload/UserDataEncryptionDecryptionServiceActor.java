@@ -43,6 +43,7 @@ public class UserDataEncryptionDecryptionServiceActor extends UntypedAbstractAct
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void decryptUserData(Request actorMessage) {
     ProjectLogger.log(
         "DecryptUserData API called by " + actorMessage.getRequest().get(JsonKey.REQUESTED_BY));
@@ -77,6 +78,7 @@ public class UserDataEncryptionDecryptionServiceActor extends UntypedAbstractAct
 
   }
 
+  @SuppressWarnings("unchecked")
   private void getUserAddressDataDecryptAndUpdateDb(String userId) {
     Response response = cassandraOperation.getRecordsByProperty(addrDbInfo.getKeySpace(),
         addrDbInfo.getTableName(), JsonKey.USER_ID, userId);
@@ -95,6 +97,7 @@ public class UserDataEncryptionDecryptionServiceActor extends UntypedAbstractAct
 
   }
 
+  @SuppressWarnings("unchecked")
   private void encryptUserData(Request actorMessage) {
     ProjectLogger.log(
         "EncryptUserData API called by " + actorMessage.getRequest().get(JsonKey.REQUESTED_BY));
@@ -128,6 +131,7 @@ public class UserDataEncryptionDecryptionServiceActor extends UntypedAbstractAct
 
   }
 
+  @SuppressWarnings("unchecked")
   private void getUserAddressDataEncryptAndUpdateDb(String userId) {
     Response response = cassandraOperation.getRecordsByProperty(addrDbInfo.getKeySpace(),
         addrDbInfo.getTableName(), JsonKey.USER_ID, userId);
