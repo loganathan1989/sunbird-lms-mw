@@ -187,6 +187,7 @@ public class BadgesActor extends UntypedAbstractActor {
       String body = "{\"request\":{\"filters\":{\"identifier\":\"test\"}}}";
       Map<String, String> headers = new HashMap<>();
       headers.put(JsonKey.AUTHORIZATION, ConfigUtil.config.getString(JsonKey.AUTHORIZATION));
+      headers.put("Content_Type", "application/json; charset=utf-8");
       String response = HttpUtil.sendPostRequest(
           ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL)
               + ConfigUtil.config.getString(JsonKey.EKSTEP_CONTENT_SEARCH_URL),

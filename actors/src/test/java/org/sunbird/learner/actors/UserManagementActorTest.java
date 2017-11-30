@@ -292,7 +292,6 @@ public class UserManagementActorTest {
       try {
         encUserId = encryptionService.encryptData(encUserId);
       } catch (Exception e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -312,7 +311,6 @@ public class UserManagementActorTest {
       try {
         encUserId = encryptionService.encryptData(encUserId);
       } catch (Exception e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -357,7 +355,6 @@ public class UserManagementActorTest {
         addrLine1 = encryptionService.encryptData("addr line1");
         encUserId = encryptionService.encryptData(userId);
       } catch (Exception e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -546,7 +543,6 @@ public class UserManagementActorTest {
       try {
         enccity = encryptionService.encryptData("new city");
       } catch (Exception e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }
@@ -592,7 +588,6 @@ public class UserManagementActorTest {
     try {
       Thread.sleep(3000);
     } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     TestKit probe = new TestKit(system);
@@ -611,7 +606,6 @@ public class UserManagementActorTest {
     try {
       Thread.sleep(2000);
     } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     Map<String, Object> result = (Map<String, Object>) (userResponse.getResult());
@@ -1205,6 +1199,7 @@ public class UserManagementActorTest {
   @SuppressWarnings("deprecation")
   @Test
   public void userchangePasswordSuccess(){
+
     TestKit probe = new TestKit(system);
     ActorRef subject = system.actorOf(props);
     Request reqObj = new Request();
