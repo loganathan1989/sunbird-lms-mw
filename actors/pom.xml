@@ -160,7 +160,6 @@
   <build>
     <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
     <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-    <pluginManagement>
     <plugins>
       <!-- to create executable jar -->
       <plugin>
@@ -250,29 +249,7 @@
             <mainClass>org.sunbird.learner.Application</mainClass>
           </configuration>
         </plugin>
-
-        <plugin>
-        <groupId>org.openclover</groupId>
-        <artifactId>clover-maven-plugin</artifactId>
-        <version>4.2.0</version>
-        <configuration>
-          <targetPercentage>0%</targetPercentage>
-          <contextFilters>try,catch,static</contextFilters>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>verify</phase>
-            <goals>
-              <goal>instrument</goal>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
       </plugins>
-    </pluginManagement>
-
   </build>
 
   <reporting>
