@@ -243,12 +243,12 @@
             </includes>
           </configuration>
         </plugin>
-        <plugin>
+       <!--  <plugin>
           <groupId>com.atlassian.maven.plugins</groupId>
           <artifactId>maven-clover2-plugin</artifactId>
           <version>4.0.5</version>
           <configuration>
-            <!--<targetPercentage>1%</targetPercentage>-->
+            <targetPercentage>1%</targetPercentage>
             <includes>
               <include>**/*.java</include>
             </includes>
@@ -264,7 +264,7 @@
               </goals>
             </execution>
           </executions>
-        </plugin>
+        </plugin> -->
 
         <!-- to run application  -->
         <plugin>
@@ -276,15 +276,24 @@
           </configuration>
         </plugin>
 
-        <!-- adding to exclude test cases -->
         <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version>
+        <groupId>org.openclover</groupId>
+        <artifactId>clover-maven-plugin</artifactId>
+        <version>4.2.0</version>
         <configuration>
-            <skipTests>false</skipTests>
+          <targetPercentage>0%</targetPercentage>
+          <contextFilters>try,catch,static</contextFilters>
         </configuration>
-    </plugin>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>instrument</goal>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
       </plugins>
     </pluginManagement>
