@@ -173,7 +173,7 @@ public class BulkUploadManagementActor extends UntypedAbstractActor {
     List<String[]> batchList = parseCsvFile(file);
     if (null != batchList) {
       if (ConfigUtil.config.hasPath(JsonKey.BULK_UPLOAD_BATCH_DATA_SIZE)) {
-        batchDataSize = (ConfigUtil.config.getInt(JsonKey.BULK_UPLOAD_BATCH_DATA_SIZE));
+        batchDataSize = (ConfigUtil.getInt(JsonKey.BULK_UPLOAD_BATCH_DATA_SIZE));
         ProjectLogger.log("bulk upload batch data size read from config file " + batchDataSize);
       }
       if (batchDataSize > 0 && batchList.size() > batchDataSize) {
@@ -225,7 +225,7 @@ public class BulkUploadManagementActor extends UntypedAbstractActor {
     }
     if (null != orgList) {
       if (ConfigUtil.config.hasPath(JsonKey.BULK_UPLOAD_ORG_DATA_SIZE)) {
-        orgDataSize = (ConfigUtil.config.getInt(JsonKey.BULK_UPLOAD_ORG_DATA_SIZE));
+        orgDataSize = (ConfigUtil.getInt(JsonKey.BULK_UPLOAD_ORG_DATA_SIZE));
         ProjectLogger.log("bulk upload org data size read from config file " + orgDataSize);
       }
       if (orgDataSize > 0 && orgList.size() > orgDataSize) {
@@ -351,7 +351,7 @@ public class BulkUploadManagementActor extends UntypedAbstractActor {
     List<String[]> userList = parseCsvFile(file);
     if (null != userList) {
       if (ConfigUtil.config.hasPath(JsonKey.BULK_UPLOAD_USER_DATA_SIZE)) {
-        userDataSize = (ConfigUtil.config.getInt(JsonKey.BULK_UPLOAD_USER_DATA_SIZE));
+        userDataSize = (ConfigUtil.getInt(JsonKey.BULK_UPLOAD_USER_DATA_SIZE));
         ProjectLogger.log("bulk upload user data size read from config file " + userDataSize);
       }
       if (userDataSize > 0 && userList.size() > userDataSize) {

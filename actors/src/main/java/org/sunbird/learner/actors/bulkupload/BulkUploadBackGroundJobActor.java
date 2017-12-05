@@ -1304,7 +1304,7 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
         userMap.put(JsonKey.CREATED_DATE, ProjectUtil.getFormattedDate());
         userMap.put(JsonKey.STATUS, ProjectUtil.Status.ACTIVE.getValue());
         if(!ProjectUtil.isStringNullOREmpty((String) userMap.get(JsonKey.COUNTRY_CODE))){
-          userMap.put(JsonKey.COUNTRY_CODE,  ConfigUtil.config.getString("sunbird_default_country_code"));
+          userMap.put(JsonKey.COUNTRY_CODE,  ConfigUtil.getString("sunbird_default_country_code"));
         }
         /**
          * set role as PUBLIC by default if role is empty in request body. And if roles are coming
@@ -1616,20 +1616,20 @@ public class BulkUploadBackGroundJobActor extends UntypedAbstractActor {
       emailTemplateMap.put(JsonKey.RECIPIENT_EMAILS, reciptientsMail);
       if (ConfigUtil.config.hasPath(JsonKey.SUNBIRD_WEB_URL)) {
         emailTemplateMap.put(JsonKey.WEB_URL,
-            ConfigUtil.config.getString(JsonKey.SUNBIRD_WEB_URL));
+            ConfigUtil.getString(JsonKey.SUNBIRD_WEB_URL));
       }
       if (ConfigUtil.config.hasPath(JsonKey.SUNBIRD_APP_URL)) {
         emailTemplateMap.put(JsonKey.APP_URL,
-            ConfigUtil.config.getString(JsonKey.SUNBIRD_APP_URL));
+            ConfigUtil.getString(JsonKey.SUNBIRD_APP_URL));
       }
 
       emailTemplateMap.put(JsonKey.BODY,
-          ConfigUtil.config.getString(JsonKey.ONBOARDING_WELCOME_MAIL_BODY));
-      emailTemplateMap.put(JsonKey.NOTE, ConfigUtil.config.getString(JsonKey.MAIL_NOTE));
-      emailTemplateMap.put(JsonKey.ORG_NAME, ConfigUtil.config.getString(JsonKey.ORG_NAME));
-      String welcomeMessage = ConfigUtil.config.getString(JsonKey.ONBOARDING_WELCOME_MESSAGE);
+          ConfigUtil.getString(JsonKey.ONBOARDING_WELCOME_MAIL_BODY));
+      emailTemplateMap.put(JsonKey.NOTE, ConfigUtil.getString(JsonKey.MAIL_NOTE));
+      emailTemplateMap.put(JsonKey.ORG_NAME, ConfigUtil.getString(JsonKey.ORG_NAME));
+      String welcomeMessage = ConfigUtil.getString(JsonKey.ONBOARDING_WELCOME_MESSAGE);
       emailTemplateMap.put(JsonKey.WELCOME_MESSAGE, ProjectUtil
-          .formatMessage(welcomeMessage, ConfigUtil.config.getString(JsonKey.ORG_NAME)).trim());
+          .formatMessage(welcomeMessage, ConfigUtil.getString(JsonKey.ORG_NAME)).trim());
 
       emailTemplateMap.put(JsonKey.EMAIL_TEMPLATE_TYPE, "welcome");
 

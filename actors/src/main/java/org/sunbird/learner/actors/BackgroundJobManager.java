@@ -695,9 +695,9 @@ public class BackgroundJobManager extends UntypedAbstractActor {
   private String getCourseData(String contentId) {
     String responseData = null;
     try {
-      String ekStepBaseUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
+      String ekStepBaseUrl = ConfigUtil.getString(JsonKey.EKSTEP_BASE_URL);
       responseData = HttpUtil.sendGetRequest(ekStepBaseUrl
-          + ConfigUtil.config.getString(JsonKey.EKSTEP_CONTENT_URL) + contentId,
+          + ConfigUtil.getString(JsonKey.EKSTEP_CONTENT_URL) + contentId,
           headerMap);
     } catch (IOException e) {
       ProjectLogger.log(e.getMessage(), e);
@@ -804,8 +804,8 @@ public class BackgroundJobManager extends UntypedAbstractActor {
     try {
       ProjectLogger.log("start call for registering the tag ==" + tagId);
       tagStatus = HttpUtil.sendPostRequest(
-          ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL)
-              + ConfigUtil.config.getString(JsonKey.EKSTEP_TAG_API_URL) + "/" + tagId,
+          ConfigUtil.getString(JsonKey.EKSTEP_BASE_URL)
+              + ConfigUtil.getString(JsonKey.EKSTEP_TAG_API_URL) + "/" + tagId,
           body, header);
       ProjectLogger
           .log("end call for tag registration id and status  ==" + tagId + " " + tagStatus);

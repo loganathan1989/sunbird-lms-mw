@@ -154,7 +154,7 @@ public class ActorAuditLogServiceImpl extends UntypedAbstractActor implements Au
   private Map<String, Object> processData(Map<String, Object> requestBody, String objectProperty) {
     Map<String, Object> relationsMap = new HashMap<>();
     Map<String, Object> logRecords = new HashMap<>();
-    String userRelations = ConfigUtil.config.getString(objectProperty);
+    String userRelations = ConfigUtil.getString(objectProperty);
     String[] relations = userRelations.split(",");
     for (String relation : relations) {
       if (requestBody.containsKey(relation)) {
@@ -192,7 +192,7 @@ public class ActorAuditLogServiceImpl extends UntypedAbstractActor implements Au
     Calendar cal = Calendar.getInstance();
     if(ProjectUtil.isStringNullOREmpty(fromDate) && ProjectUtil.isStringNullOREmpty(toDate)){
       toDate = dateFormat2.format(new Date());
-      cal.add(Calendar.DATE, -(ConfigUtil.config.getInt(JsonKey.DEFAULT_DATE_RANGE)));
+      cal.add(Calendar.DATE, -(ConfigUtil.getInt(JsonKey.DEFAULT_DATE_RANGE)));
       Date toDate1 = cal.getTime();    
       fromDate = dateFormat2.format(toDate1);
       map = new HashMap<>();
@@ -228,7 +228,7 @@ public class ActorAuditLogServiceImpl extends UntypedAbstractActor implements Au
         filters.put(JsonKey.DATE,map);
       }
     }else if(!ProjectUtil.isStringNullOREmpty(fromDate) && ProjectUtil.isStringNullOREmpty(toDate)){
-      cal.add(Calendar.DATE, ConfigUtil.config.getInt(JsonKey.DEFAULT_DATE_RANGE));
+      cal.add(Calendar.DATE, ConfigUtil.getInt(JsonKey.DEFAULT_DATE_RANGE));
       Date todate = cal.getTime(); 
       
       map = new HashMap<>();

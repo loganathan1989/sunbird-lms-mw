@@ -33,7 +33,7 @@ public class KeyCloakSyncActor extends UntypedAbstractActor {
 
   private CassandraOperation cassandraOperation = ServiceFactory.getInstance();
   boolean isSSOEnabled =
-      Boolean.parseBoolean(ConfigUtil.config.getString(JsonKey.IS_SSO_ENABLED));
+      ConfigUtil.getBoolean(JsonKey.IS_SSO_ENABLED);
   private SSOManager ssoManager = SSOServiceFactory.getInstance();
   
   @Override

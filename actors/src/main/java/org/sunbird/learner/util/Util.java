@@ -186,7 +186,7 @@ public class Util {
      */
     public static void checkCassandraDbConnections(String keySpace) {
 
-      String cassandraMode = ConfigUtil.config.getString(JsonKey.SUNBIRD_CASSANDRA_MODE);
+      String cassandraMode = ConfigUtil.getString(JsonKey.SUNBIRD_CASSANDRA_MODE);
       if (ProjectUtil.isStringNullOREmpty(cassandraMode) || cassandraMode
           .equalsIgnoreCase(JsonKey.EMBEDDED_MODE)) {
 
@@ -434,9 +434,9 @@ public class Util {
         JSONObject jObject;
         ObjectMapper mapper = new ObjectMapper();
         try {
-          String baseSearchUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
-          headers.put(JsonKey.AUTHORIZATION, JsonKey.BEARER + ConfigUtil.config.getString(JsonKey.AUTHORIZATION));
-          response = HttpUtil.sendPostRequest(baseSearchUrl + ConfigUtil.config.getString(JsonKey.EKSTEP_CONTENT_SEARCH_URL),
+          String baseSearchUrl = ConfigUtil.getString(JsonKey.EKSTEP_BASE_URL);
+          headers.put(JsonKey.AUTHORIZATION, JsonKey.BEARER + ConfigUtil.getString(JsonKey.AUTHORIZATION));
+          response = HttpUtil.sendPostRequest(baseSearchUrl + ConfigUtil.getString(JsonKey.EKSTEP_CONTENT_SEARCH_URL),
                     (String) section.get(JsonKey.SEARCH_QUERY), headers);
             jObject = new JSONObject(response);
             data = jObject.getJSONObject(JsonKey.RESULT);

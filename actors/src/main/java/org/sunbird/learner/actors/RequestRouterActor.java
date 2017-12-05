@@ -461,11 +461,11 @@ public class RequestRouterActor extends UntypedAbstractActor {
   }
 
   public static void createConnectionForBackgroundActors() {
-    String path = ConfigUtil.config.getString(JsonKey.BACKGROUND_REMOTE_ACTOR_PATH);
+    String path = ConfigUtil.getString(JsonKey.BACKGROUND_REMOTE_ACTOR_PATH);
     ActorSystem system = null;
     Config con = null;
     if ("local"
-        .equalsIgnoreCase(ConfigUtil.config.getString(JsonKey.API_ACTOR_PROVIDER))) {
+        .equalsIgnoreCase(ConfigUtil.getString(JsonKey.API_ACTOR_PROVIDER))) {
         con = ConfigUtil.config.getConfig(ACTOR_CONFIG_NAME);
 
       system = akka.actor.ActorSystem.create(REMOTE_ACTOR_SYSTEM_NAME, con);
@@ -474,11 +474,11 @@ public class RequestRouterActor extends UntypedAbstractActor {
     }
     try {
       if (ConfigUtil.config.hasPath(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP) && ConfigUtil.config.hasPath(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT)) {
-        String bkghost = ConfigUtil.config.getString(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP);
-        String bkgport = ConfigUtil.config.getString(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT);
+        String bkghost = ConfigUtil.getString(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_IP);
+        String bkgport = ConfigUtil.getString(JsonKey.BKG_SUNBIRD_ACTOR_SERVICE_PORT);
         ProjectLogger.log("value is taking from system env");
         path = MessageFormat.format(
-            ConfigUtil.config.getString(JsonKey.BACKGROUND_REMOTE_ACTOR_ENV_PATH),
+            ConfigUtil.getString(JsonKey.BACKGROUND_REMOTE_ACTOR_ENV_PATH),
            bkghost,bkgport);
       }
       ProjectLogger.log("Actor path is ==" + path, LoggerEnum.INFO.name());

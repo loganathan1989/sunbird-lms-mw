@@ -31,7 +31,7 @@ import org.sunbird.learner.actors.CourseEnrollmentActor;
 public class CourseBatchSchedulerUtil {
   public static Map<String,String> headerMap = new HashMap<>();
   static {
-    String header = ConfigUtil.config.getString(JsonKey.EKSTEP_AUTHORIZATION);
+    String header = ConfigUtil.getString(JsonKey.EKSTEP_AUTHORIZATION);
     header = JsonKey.BEARER + header;
     headerMap.put(JsonKey.AUTHORIZATION, header);
     headerMap.put("Content-Type", "application/json");
@@ -139,7 +139,7 @@ public class CourseBatchSchedulerUtil {
   }
   
   public static String doOperationInEkStepCourse (String courseId, boolean increment,String enrollmentType ) {
-    String name = ConfigUtil.config.getString(JsonKey.SUNBIRD_INSTALLATION);
+    String name = ConfigUtil.getString(JsonKey.SUNBIRD_INSTALLATION);
     String contentName = "";
     String response = "";
     if(enrollmentType.equals(ProjectUtil.EnrolmentType.open.getVal())){
@@ -160,9 +160,9 @@ public class CourseBatchSchedulerUtil {
        }
       try {
         ProjectLogger.log("updating content details to Ekstep start", LoggerEnum.INFO.name());
-        String contentUpdateBaseUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
+        String contentUpdateBaseUrl = ConfigUtil.getString(JsonKey.EKSTEP_BASE_URL);
         response = HttpUtil.sendPatchRequest(
-            contentUpdateBaseUrl + ConfigUtil.config.getString(JsonKey.EKSTEP_CONTENT_UPDATE_URL)
+            contentUpdateBaseUrl + ConfigUtil.getString(JsonKey.EKSTEP_CONTENT_UPDATE_URL)
                 + courseId,
             "{\"request\": {\"content\": {\"" + contentName + "\": " + val + "}}}", headerMap);
         ProjectLogger.log("batch count update response==" + response + " " + courseId,

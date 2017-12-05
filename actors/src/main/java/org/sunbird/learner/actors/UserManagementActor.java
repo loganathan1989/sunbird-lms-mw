@@ -60,7 +60,7 @@ public class UserManagementActor extends UntypedAbstractActor {
   private DecryptionService decryptionService = org.sunbird.common.models.util.datasecurity.impl.ServiceFactory
       .getDecryptionServiceInstance(null);
   boolean isSSOEnabled =
-      Boolean.parseBoolean(ConfigUtil.config.getString(JsonKey.IS_SSO_ENABLED));
+      ConfigUtil.getBoolean(JsonKey.IS_SSO_ENABLED);
   private Util.DbInfo userOrgDbInfo = Util.dbInfoMap.get(JsonKey.USER_ORG_DB);
   private Util.DbInfo geoLocationDbInfo = Util.dbInfoMap.get(JsonKey.GEO_LOCATION_DB);
   private final String SUNBIRD_WEB_URL = "sunbird_web_url";
@@ -438,8 +438,8 @@ public class UserManagementActor extends UntypedAbstractActor {
     Response response = new Response();
     response.put(JsonKey.RESPONSE, JsonKey.SUCCESS);
     sender().tell(response, self());
-    if (Boolean.parseBoolean(
-      ConfigUtil.config.getString(JsonKey.IS_SSO_ENABLED))) {
+    if (
+      ConfigUtil.getBoolean(JsonKey.IS_SSO_ENABLED)) {
 
       boolean addedResponse = ssoManager.addUserLoginTime(userId);
       ProjectLogger.log("user login time added response is ==" + addedResponse);
@@ -1633,7 +1633,7 @@ public class UserManagementActor extends UntypedAbstractActor {
     }
     requestMap.put(JsonKey.PROFILE_VISIBILITY, profileVisbility);
     if(!ProjectUtil.isStringNullOREmpty((String) requestMap.get(JsonKey.COUNTRY_CODE))){
-      requestMap.put(JsonKey.COUNTRY_CODE, ConfigUtil.config.getString("sunbird_default_country_code"));
+      requestMap.put(JsonKey.COUNTRY_CODE, ConfigUtil.getString("sunbird_default_country_code"));
     }
     Response response = null;
     try {
@@ -2819,11 +2819,11 @@ public class UserManagementActor extends UntypedAbstractActor {
       emailTemplateMap.put(JsonKey.RECIPIENT_EMAILS, reciptientsMail);
       if (ConfigUtil.config.hasPath(JsonKey.SUNBIRD_WEB_URL)) {
         emailTemplateMap.put(JsonKey.WEB_URL,
-            ConfigUtil.config.getString(JsonKey.SUNBIRD_WEB_URL));
+            ConfigUtil.getString(JsonKey.SUNBIRD_WEB_URL));
       }
       String appUrl = null;
       if (ConfigUtil.config.hasPath(JsonKey.SUNBIRD_APP_URL)) {
-        appUrl = ConfigUtil.config.getString(JsonKey.SUNBIRD_APP_URL);
+        appUrl = ConfigUtil.getString(JsonKey.SUNBIRD_APP_URL);
       }
 
       if ((!ProjectUtil.isStringNullOREmpty(appUrl)) && (!JsonKey.SUNBIRD_APP_URL.equalsIgnoreCase(appUrl))) {
@@ -2831,12 +2831,12 @@ public class UserManagementActor extends UntypedAbstractActor {
       }
 
       emailTemplateMap.put(JsonKey.BODY,
-          ConfigUtil.config.getString(JsonKey.ONBOARDING_WELCOME_MAIL_BODY));
-      emailTemplateMap.put(JsonKey.NOTE, ConfigUtil.config.getString(JsonKey.MAIL_NOTE));
-      emailTemplateMap.put(JsonKey.ORG_NAME, ConfigUtil.config.getString(JsonKey.ORG_NAME));
-      String welcomeMessage = ConfigUtil.config.getString(JsonKey.ONBOARDING_WELCOME_MESSAGE);
+          ConfigUtil.getString(JsonKey.ONBOARDING_WELCOME_MAIL_BODY));
+      emailTemplateMap.put(JsonKey.NOTE, ConfigUtil.getString(JsonKey.MAIL_NOTE));
+      emailTemplateMap.put(JsonKey.ORG_NAME, ConfigUtil.getString(JsonKey.ORG_NAME));
+      String welcomeMessage = ConfigUtil.getString(JsonKey.ONBOARDING_WELCOME_MESSAGE);
       emailTemplateMap.put(JsonKey.WELCOME_MESSAGE, ProjectUtil
-          .formatMessage(welcomeMessage, ConfigUtil.config.getString(JsonKey.ORG_NAME)).trim());
+          .formatMessage(welcomeMessage, ConfigUtil.getString(JsonKey.ORG_NAME)).trim());
 
       emailTemplateMap.put(JsonKey.EMAIL_TEMPLATE_TYPE, "welcome");
 
@@ -2858,10 +2858,10 @@ public class UserManagementActor extends UntypedAbstractActor {
     VelocityContext context = new VelocityContext();
     context.put(JsonKey.NAME, name);
     context.put(JsonKey.TEMPORARY_PASSWORD, ProjectUtil.generateRandomPassword());
-    context.put(JsonKey.NOTE , ConfigUtil.config.getString(JsonKey.MAIL_NOTE));
-    context.put(JsonKey.ORG_NAME , ConfigUtil.config.getString(JsonKey.ORG_NAME));
-    String appUrl = ConfigUtil.config.getString(JsonKey.SUNBIRD_APP_URL);
-    context.put(JsonKey.WEB_URL, ConfigUtil.config.getString(JsonKey.SUNBIRD_WEB_URL));
+    context.put(JsonKey.NOTE , ConfigUtil.getString(JsonKey.MAIL_NOTE));
+    context.put(JsonKey.ORG_NAME , ConfigUtil.getString(JsonKey.ORG_NAME));
+    String appUrl = ConfigUtil.getString(JsonKey.SUNBIRD_APP_URL);
+    context.put(JsonKey.WEB_URL, ConfigUtil.getString(JsonKey.SUNBIRD_WEB_URL));
     if(!ProjectUtil.isStringNullOREmpty(appUrl)) {
        if (!JsonKey.SUNBIRD_APP_URL.equalsIgnoreCase(appUrl)) {
          context.put(JsonKey.APP_URL, appUrl);
@@ -2917,7 +2917,7 @@ public class UserManagementActor extends UntypedAbstractActor {
   private String getLastLoginTime(String userId,String time) {
     String lastLoginTime = "0";
     if (Boolean.parseBoolean(
-        ConfigUtil.config.getString(JsonKey.IS_SSO_ENABLED))) {
+        ConfigUtil.getString(JsonKey.IS_SSO_ENABLED))) {
       SSOManager manager = SSOServiceFactory.getInstance();
       lastLoginTime =
           manager.getLastLoginTime(userId);

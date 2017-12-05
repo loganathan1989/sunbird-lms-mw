@@ -19,7 +19,7 @@ public class ActorSystemFactory {
 
   static {
     if ("remote"
-        .equalsIgnoreCase(ConfigUtil.config.getString(JsonKey.BACKGROUND_ACTOR_PROVIDER))) {
+        .equalsIgnoreCase(ConfigUtil.getString(JsonKey.BACKGROUND_ACTOR_PROVIDER))) {
       ProjectLogger.log("Initializing Remote Actor System");
       createRemoteActorSystem();
     } else {

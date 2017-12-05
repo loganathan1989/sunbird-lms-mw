@@ -20,7 +20,7 @@ public class ActorSystemTest {
   @BeforeClass
   public static void setUp() {
     Application.startLocalActorSystem();
-    provider = ConfigUtil.config.getString(JsonKey.BACKGROUND_ACTOR_PROVIDER);
+    provider = ConfigUtil.getString(JsonKey.BACKGROUND_ACTOR_PROVIDER);
   }
   
   @SuppressWarnings("deprecation")

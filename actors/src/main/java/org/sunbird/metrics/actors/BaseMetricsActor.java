@@ -275,12 +275,12 @@ public abstract class BaseMetricsActor extends UntypedAbstractActor {
     Map<String, String> headers = new HashMap<>();
     String response = null;
     try {
-      String baseSearchUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
+      String baseSearchUrl = ConfigUtil.getString(JsonKey.EKSTEP_BASE_URL);
       headers.put(JsonKey.AUTHORIZATION, JsonKey.BEARER
-          + ConfigUtil.config.getString(JsonKey.EKSTEP_AUTHORIZATION));
+          + ConfigUtil.getString(JsonKey.EKSTEP_AUTHORIZATION));
       headers.put("Content_Type", "application/json; charset=utf-8");
       response = HttpUtil.sendPostRequest(
-          baseSearchUrl + ConfigUtil.config.getString(apiUrl), request, headers);
+          baseSearchUrl + ConfigUtil.getString(apiUrl), request, headers);
 
     } catch (Exception e) {
       ProjectLogger.log("Error occured", e);
@@ -295,9 +295,9 @@ public abstract class BaseMetricsActor extends UntypedAbstractActor {
     Map<String, String> headers = new HashMap<>();
     String response = null;
     try {
-      String baseSearchUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
+      String baseSearchUrl = ConfigUtil.getString(JsonKey.EKSTEP_BASE_URL);
       headers.put(JsonKey.AUTHORIZATION, JsonKey.BEARER
-          + ConfigUtil.config.getString(JsonKey.EKSTEP_AUTHORIZATION));
+          + ConfigUtil.getString(JsonKey.EKSTEP_AUTHORIZATION));
       headers.put("Content_Type", "application/json; charset=utf-8");
       response = HttpUtil.sendGetRequest(
           baseSearchUrl + apiUrl , headers);
@@ -313,11 +313,11 @@ public abstract class BaseMetricsActor extends UntypedAbstractActor {
 
   public static String makePostRequest(String url, String body) throws Exception {
     ProjectLogger.log("Request to Ekstep for Metrics" + body);
-    String baseSearchUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
-    String authKey = ConfigUtil.config.getString(JsonKey.EKSTEP_AUTHORIZATION);
+    String baseSearchUrl = ConfigUtil.getString(JsonKey.EKSTEP_BASE_URL);
+    String authKey = ConfigUtil.getString(JsonKey.EKSTEP_AUTHORIZATION);
     authKey = JsonKey.BEARER + authKey;
     HttpClient client = HttpClientBuilder.create().build();
-    HttpPost post = new HttpPost(baseSearchUrl + ConfigUtil.config.getString(url));
+    HttpPost post = new HttpPost(baseSearchUrl + ConfigUtil.getString(url));
     post.addHeader("Content-Type", "application/json; charset=utf-8");
     post.addHeader(JsonKey.AUTHORIZATION, authKey);
     post.setEntity(new StringEntity(body, Charsets_UTF_8));

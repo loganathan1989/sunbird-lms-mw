@@ -48,7 +48,7 @@ public class SchedulerManager {
       Thread.sleep(240000);
       boolean isEmbedded = false;
       Properties configProp = null;
-      String embeddVal = ConfigUtil.config.getString(JsonKey.SUNBIRD_QUARTZ_MODE);
+      String embeddVal = ConfigUtil.getString(JsonKey.SUNBIRD_QUARTZ_MODE);
       if (JsonKey.EMBEDDED.equalsIgnoreCase(embeddVal)) {
         isEmbedded = true;
       } else {
@@ -72,7 +72,7 @@ public class SchedulerManager {
       // server time is set in UTC so all scheduler need to be manage based on that time only.
       Trigger trigger = TriggerBuilder.newTrigger().withIdentity("schedulertrigger", identifier)
           .withSchedule(CronScheduleBuilder
-              .cronSchedule(ConfigUtil.config.getString(JsonKey.COURSE_BATCH_TIMER)))
+              .cronSchedule(ConfigUtil.getString(JsonKey.COURSE_BATCH_TIMER)))
           .build();
       try {
         if (scheduler.checkExists(job.getKey())) {
@@ -95,7 +95,7 @@ public class SchedulerManager {
       Trigger uploadTrigger =
           TriggerBuilder.newTrigger().withIdentity("uploadVerifyTrigger", identifier)
               .withSchedule(CronScheduleBuilder
-                  .cronSchedule(ConfigUtil.config.getString(JsonKey.UPLOAD_TIMER)))
+                  .cronSchedule(ConfigUtil.getString(JsonKey.UPLOAD_TIMER)))
               .build();
       try {
         if (scheduler.checkExists(uploadVerifyJob.getKey())) {
@@ -119,7 +119,7 @@ public class SchedulerManager {
       Trigger coursePublishedTrigger =
           TriggerBuilder.newTrigger().withIdentity("coursePublishedTrigger", identifier)
               .withSchedule(CronScheduleBuilder.cronSchedule(
-                  ConfigUtil.config.getString(JsonKey.COURSE_PUBLISH_TIMER)))
+                  ConfigUtil.getString(JsonKey.COURSE_PUBLISH_TIMER)))
               .build();
       try {
         if (scheduler.checkExists(coursePublishedJob.getKey())) {
@@ -145,7 +145,7 @@ public class SchedulerManager {
       Trigger metricsReportRetryTrigger =
           TriggerBuilder.newTrigger().withIdentity("metricsReportRetryTrigger", identifier)
               .withSchedule(CronScheduleBuilder.cronSchedule(
-                  ConfigUtil.config.getString(JsonKey.MATRIX_REPORT_TIMER)))
+                  ConfigUtil.getString(JsonKey.MATRIX_REPORT_TIMER)))
               .build();
       try {
         if (scheduler.checkExists(metricsReportJob.getKey())) {
@@ -170,7 +170,7 @@ public class SchedulerManager {
       Trigger metricsTrigger =
           TriggerBuilder.newTrigger().withIdentity("metricsTrigger", identifier)
               .withSchedule(CronScheduleBuilder
-                  .cronSchedule(ConfigUtil.config.getString(JsonKey.METRICS_TIMER)))
+                  .cronSchedule(ConfigUtil.getString(JsonKey.METRICS_TIMER)))
               .build();
       try {
         if (scheduler.checkExists(metricsJob.getKey())) {
@@ -200,11 +200,11 @@ public class SchedulerManager {
    */
   public Properties setUpClusterMode() throws Exception {
     Properties configProp = new Properties();
-    String host = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_HOST);
-    String port = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_PORT);
-    String db = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_DB);
-    String username = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_USER);
-    String password = ConfigUtil.config.getString(JsonKey.SUNBIRD_PG_PASSWORD);
+    String host = ConfigUtil.getString(JsonKey.SUNBIRD_PG_HOST);
+    String port = ConfigUtil.getString(JsonKey.SUNBIRD_PG_PORT);
+    String db = ConfigUtil.getString(JsonKey.SUNBIRD_PG_DB);
+    String username = ConfigUtil.getString(JsonKey.SUNBIRD_PG_USER);
+    String password = ConfigUtil.getString(JsonKey.SUNBIRD_PG_PASSWORD);
     ProjectLogger
         .log("Settings for PostGres SQl= host, port,db,username,password " + host
             + " ," + port + "," + db + "," + username + "," + password, LoggerEnum.INFO.name());

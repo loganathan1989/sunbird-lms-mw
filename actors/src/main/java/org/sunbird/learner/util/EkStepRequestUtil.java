@@ -40,11 +40,11 @@ public class EkStepRequestUtil {
 		JSONObject data;
 		JSONObject jObject;
 		try {
-		  String baseSearchUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_BASE_URL);
-		  headers.put(JsonKey.AUTHORIZATION, ConfigUtil.config.getString(JsonKey.AUTHORIZATION));
+		  String baseSearchUrl = ConfigUtil.getString(JsonKey.EKSTEP_BASE_URL);
+		  headers.put(JsonKey.AUTHORIZATION, ConfigUtil.getString(JsonKey.AUTHORIZATION));
 		  headers.put("Content-Type", "application/json");
 		  response = HttpUtil.sendPostRequest(baseSearchUrl+
-			    ConfigUtil.config.getString(JsonKey.EKSTEP_CONTENT_SEARCH_URL), params, headers);
+			    ConfigUtil.getString(JsonKey.EKSTEP_CONTENT_SEARCH_URL), params, headers);
 			jObject = new JSONObject(response);
 			data = jObject.getJSONObject(JsonKey.RESULT);
 			ProjectLogger.log("Total number of content fetched from Ekstep while assembling page data : "+data.get("count"));

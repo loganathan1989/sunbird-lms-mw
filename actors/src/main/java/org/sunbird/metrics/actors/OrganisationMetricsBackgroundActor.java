@@ -388,7 +388,7 @@ public class OrganisationMetricsBackgroundActor extends BaseMetricsActor {
   private static Map<String, String> conceptList() {
     List<String> domains = getDomains();
     for (String domain : domains) {
-      String url = ConfigUtil.config.getString(JsonKey.EKSTEP_CONCEPT_URL);
+      String url = ConfigUtil.getString(JsonKey.EKSTEP_CONCEPT_URL);
       url = StringUtils.replace(url, "{domain}", domain);
       String resposne = getDataFromEkstep(url);
       try {
@@ -410,7 +410,7 @@ public class OrganisationMetricsBackgroundActor extends BaseMetricsActor {
   
   @SuppressWarnings("unchecked")
   private static List<String> getDomains() {
-    String domainUrl = ConfigUtil.config.getString(JsonKey.EKSTEP_DOMAIN_URL);
+    String domainUrl = ConfigUtil.getString(JsonKey.EKSTEP_DOMAIN_URL);
     String resposne = getDataFromEkstep(domainUrl);
     List<String> domainList = new ArrayList<>();
     try {
