@@ -18,12 +18,17 @@ public class ActorSystemFactory {
   private ActorSystemFactory() {}
 
   static {
+    try{
     if ("remote"
         .equalsIgnoreCase(ConfigUtil.getString(JsonKey.BACKGROUND_ACTOR_PROVIDER))) {
-      ProjectLogger.log("Initializing Remote Actor System");
+      ProjectLogger.log("Initializing Remote Actor System in org.sunbird.learner.util.actorutility.ActorSystemFactory");
       createRemoteActorSystem();
     } else {
+      ProjectLogger.log("Initializing Local Actor System in org.sunbird.learner.util.actorutility.ActorSystemFactory");
       createLocalActorSystem();
+    }
+    }catch(Exception ex){
+      ProjectLogger.log("Exception In org.sunbird.learner.util.actorutility.ActorSystemFactory "+ex);
     }
   }
   

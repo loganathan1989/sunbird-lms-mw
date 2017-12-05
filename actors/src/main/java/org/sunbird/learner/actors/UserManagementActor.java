@@ -41,6 +41,8 @@ import org.sunbird.learner.util.SocialMediaType;
 import org.sunbird.learner.util.UserUtility;
 import org.sunbird.learner.util.Util;
 import org.sunbird.learner.util.Util.DbInfo;
+import org.sunbird.notification.sms.provider.ISmsProvider;
+import org.sunbird.notification.utils.SMSFactory;
 import org.sunbird.services.sso.SSOManager;
 import org.sunbird.services.sso.SSOServiceFactory;
 
@@ -1718,7 +1720,7 @@ public class UserManagementActor extends UntypedAbstractActor {
 
     // user created successfully send the onboarding mail
     sendOnboardingMail(emailTemplateMap);
-
+    sendSMS(userMap);
 
     if (((String) response.get(JsonKey.RESPONSE)).equalsIgnoreCase(JsonKey.SUCCESS)) {
       ProjectLogger.log("method call going to satrt for ES--.....");
@@ -1735,6 +1737,28 @@ public class UserManagementActor extends UntypedAbstractActor {
       ProjectLogger.log("no call for ES to save user");
     }
 
+  }
+
+  @SuppressWarnings("unchecked")
+  private void sendSMS(Map<String, Object> userMap) {
+    UserUtility.decryptUserData(userMap);
+    if(ProjectUtil.isStringNullOREmpty((String) userMap.get(JsonKey.EMAIL)) && 
+        !ProjectUtil.isStringNullOREmpty((String) userMap.get(JsonKey.PHONE))){
+      String countryCode = "";
+      if(ProjectUtil.isStringNullOREmpty((String) userMap.get(JsonKey.COUNTRY_CODE))){
+        countryCode = ConfigUtil.getString("sunbird_default_country_code");
+      }else{
+        countryCode = (String) userMap.get(JsonKey.COUNTRY_CODE);
+      }
+      ISmsProvider smsProvider = SMSFactory.getInstance("91SMS");
+      String msg = ConfigUtil.getString("sunbird_default_welcome_sms");
+      boolean response = smsProvider.send((String) userMap.get(JsonKey.PHONE), countryCode, msg);
+      if(response){
+        ProjectLogger.log("Welcome Message sent successfully to ."+(String) userMap.get(JsonKey.PHONE));
+      } else {
+        ProjectLogger.log("Welcome Message failed for ."+(String) userMap.get(JsonKey.PHONE));
+      }
+    }
   }
 
   @SuppressWarnings("unchecked")
