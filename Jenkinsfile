@@ -5,7 +5,7 @@ node('build-slave') {
    currentBuild.result = "SUCCESS"
 
    try {
-          
+      cleanWs()
       stage('Checkout'){
          checkout scm
        }
